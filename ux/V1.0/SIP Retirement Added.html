@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MoneyMatter | Investment Entry</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-primary": "#494bd6",
+                    "background": "#131313",
+                    "on-tertiary-fixed": "#410004",
+                    "on-error-container": "#ffdad6",
+                    "on-tertiary-container": "#5c0008",
+                    "secondary-fixed-dim": "#4edea3",
+                    "surface-container": "#201f1f",
+                    "tertiary-container": "#ff5451",
+                    "tertiary": "#ffb3ad",
+                    "on-secondary-fixed": "#002113",
+                    "primary-fixed-dim": "#c0c1ff",
+                    "on-surface": "#e5e2e1",
+                    "surface-container-highest": "#353534",
+                    "surface-variant": "#353534",
+                    "on-primary": "#1000a9",
+                    "tertiary-fixed": "#ffdad7",
+                    "secondary-container": "#00a572",
+                    "on-primary-container": "#0d0096",
+                    "tertiary-fixed-dim": "#ffb3ad",
+                    "outline": "#908fa0",
+                    "primary-container": "#8083ff",
+                    "surface-container-lowest": "#0e0e0e",
+                    "surface-container-high": "#2a2a2a",
+                    "error-container": "#93000a",
+                    "surface-bright": "#3a3939",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-surface-variant": "#c7c4d7",
+                    "on-tertiary-fixed-variant": "#930013",
+                    "on-error": "#690005",
+                    "surface-tint": "#c0c1ff",
+                    "surface-dim": "#131313",
+                    "primary-fixed": "#e1e0ff",
+                    "on-secondary-container": "#00311f",
+                    "on-tertiary": "#68000a",
+                    "error": "#ffb4ab",
+                    "surface-container-low": "#1c1b1b",
+                    "inverse-surface": "#e5e2e1",
+                    "on-primary-fixed": "#07006c",
+                    "on-background": "#e5e2e1",
+                    "primary": "#c0c1ff",
+                    "on-secondary": "#003824",
+                    "outline-variant": "#464554",
+                    "secondary": "#4edea3",
+                    "inverse-on-surface": "#313030",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-primary-fixed-variant": "#2f2ebe",
+                    "surface": "#131313"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "margin-mobile": "16px",
+                    "margin-desktop": "40px",
+                    "gutter": "16px",
+                    "container-padding": "24px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "data-tabular": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "data-tabular": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #000000;
+            color: #e5e2e1;
+            font-family: 'Inter', sans-serif;
+        }
+        .bento-card {
+            background-color: #111111;
+            border: 1px solid #1F1F1F;
+            transition: border-color 0.2s ease;
+        }
+        .bento-card:hover {
+            border-color: #333333;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        input::placeholder {
+            color: #464554;
+        }
+    </style>
+</head>
+<body class="overflow-hidden">
+<div class="flex h-screen overflow-hidden">
+<!-- SideNavBar (Authority Source: JSON) -->
+<aside class="flex flex-col h-screen py-container-padding gap-base border-r border-outline-variant bg-surface-container-low w-64 shrink-0 hidden md:flex">
+<div class="px-6 mb-8">
+<h1 class="font-headline-md text-headline-md font-black text-primary">MoneyMatter</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant opacity-60">Terminal v1.0</p>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<div class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 font-medium hover:bg-surface-container-highest transition-colors duration-200 rounded-lg">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</div>
+<!-- Vault Active State -->
+<div class="flex items-center gap-3 bg-primary-container text-on-primary-container rounded-lg px-4 py-3 font-bold">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-md text-label-md">Vault</span>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 font-medium hover:bg-surface-container-highest transition-colors duration-200 rounded-lg">
+<span class="material-symbols-outlined">file_upload</span>
+<span class="font-label-md text-label-md">Ingestion</span>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 font-medium hover:bg-surface-container-highest transition-colors duration-200 rounded-lg">
+<span class="material-symbols-outlined">account_tree</span>
+<span class="font-label-md text-label-md">Mapper</span>
+</div>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full py-3 px-4 bg-primary text-on-primary font-bold rounded-lg hover:brightness-110 transition-all">
+                    Upgrade to Pro
+                </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 overflow-y-auto bg-black">
+<!-- TopNavBar (Authority Source: JSON) -->
+<header class="flex justify-between items-center w-full px-margin-desktop py-4 z-50 border-b border-outline-variant bg-background sticky top-0">
+<div class="flex items-center gap-6">
+<div class="md:hidden font-headline-md text-headline-md font-bold text-primary">MM</div>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">search</span>
+</span>
+<input class="bg-surface-container-lowest border border-outline-variant text-on-surface rounded-full pl-10 pr-4 py-1.5 font-label-md text-label-md w-64 focus:outline-none focus:border-primary" placeholder="Global Search" type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-highest rounded-full transition-all">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-highest rounded-full transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-highest rounded-full transition-all">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="User profile switcher" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAG2KKlnrk0FNjfGSD8ZXAZmh2uMZaMX88WnNrqw0EYqWcPR8zQ63lbi70b3CMXqqPtM8oO7OixK0Jb71j86WzHUJew-NsilrZdUkRlumG2e-RNuKw2p9jOnc6xAUQ0KDTIbSjVnciMeoWxYW0QbIPRv5p_YOpSElTUE3WbU-D8GTAuLSazVnqRX_XVGjsrf256W7xxaZTkwuLI_RTKCNNrixiJv0ev9X_QskK-qwxUS6o83Z9-eyKO6TPVb-6ZPnrLCnbn26uL2T8"/>
+</div>
+</div>
+</header>
+<div class="p-margin-desktop max-w-[1440px] mx-auto">
+<!-- Page Header -->
+<div class="mb-8">
+<h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">New Asset Injection</h2>
+<p class="font-body-md text-body-md text-on-surface-variant opacity-70">Register a new financial instrument to your vault terminal.</p>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Left Column: Form Controls (Col 8) -->
+<div class="col-span-12 lg:col-span-8 space-y-gutter">
+<!-- Asset Type Selector (Bento Card) -->
+<div class="bento-card rounded-xl p-container-padding">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest block mb-6">Investment Category</label>
+<div class="flex flex-wrap gap-3"><button class="flex items-center gap-2 px-5 py-3 bg-primary-container text-on-primary-container rounded-lg font-bold border border-primary/20"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">savings</span><span class="font-label-md text-label-md">EPF</span></button><button class="flex items-center gap-2 px-5 py-3 bg-surface-container-high text-on-surface-variant rounded-lg font-medium border border-outline-variant hover:border-primary/50 transition-all"><span class="material-symbols-outlined">account_balance</span><span class="font-label-md text-label-md">PPF</span></button><button class="flex items-center gap-2 px-5 py-3 bg-surface-container-high text-on-surface-variant rounded-lg font-medium border border-outline-variant hover:border-primary/50 transition-all"><span class="material-symbols-outlined">retirement_confirmatory</span><span class="font-label-md text-label-md">NPS</span></button><button class="flex items-center gap-2 px-5 py-3 bg-surface-container-high text-on-surface-variant rounded-lg font-medium border border-outline-variant hover:border-primary/50 transition-all"><span class="material-symbols-outlined">calendar_month</span><span class="font-label-md text-label-md">SIP</span></button></div>
+</div>
+<!-- Dynamic Form Fields (Bento Card) -->
+<div class="bento-card rounded-xl p-container-padding">
+<div class="flex items-center justify-between mb-8">
+<h3 class="font-headline-md text-headline-md text-on-surface">Investment Details</h3>
+<span class="bg-secondary/10 text-secondary px-3 py-1 rounded-full font-label-sm text-label-sm uppercase tracking-tighter">Live Nav Enabled</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10"><div class="space-y-2"><label class="font-label-sm text-label-sm text-on-surface-variant uppercase">Monthly/Tier I Contribution</label><div class="relative group"><span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary">$</span><input class="w-full bg-black border border-outline-variant rounded-lg py-4 pl-10 pr-4 text-on-surface font-data-tabular focus:ring-0 focus:border-primary transition-all" placeholder="0.00" type="number" value="500"/></div></div><div class="space-y-2"><label class="font-label-sm text-label-sm text-on-surface-variant uppercase">Employer/Tier II Contribution</label><div class="relative group"><span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary">$</span><input class="w-full bg-black border border-outline-variant rounded-lg py-4 pl-10 pr-4 text-on-surface font-data-tabular focus:ring-0 focus:border-primary transition-all" placeholder="0.00" type="number" value="500"/></div></div><div class="space-y-2"><label class="font-label-sm text-label-sm text-on-surface-variant uppercase">Target Amount / Corpus Goal</label><div class="relative group"><span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary">$</span><input class="w-full bg-black border border-outline-variant rounded-lg py-4 pl-10 pr-4 text-on-surface font-data-tabular focus:ring-0 focus:border-primary transition-all" placeholder="0.00" type="number" value="1000000"/></div></div><div class="space-y-2"><label class="font-label-sm text-label-sm text-on-surface-variant uppercase">Asset Allocation / Maturity Year</label><input class="w-full bg-black border border-outline-variant rounded-lg py-4 px-4 text-on-surface font-data-tabular focus:ring-0 focus:border-primary transition-all" placeholder="e.g., 50/25/25 or 2045" type="text" value="2045"/></div></div>
+<div class="mt-10 pt-8 border-t border-outline-variant/30 grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase">Lock-in Period (Months)</label>
+<div class="flex items-center gap-4">
+<input class="flex-1 accent-primary h-1 bg-surface-container-highest rounded-lg appearance-none cursor-pointer" type="range"/>
+<span class="font-data-tabular text-on-surface w-8">36</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-12 h-6 bg-surface-container-highest rounded-full relative p-1 cursor-pointer">
+<div class="absolute right-1 top-1 w-4 h-4 bg-primary rounded-full"></div>
+</div>
+<span class="font-label-md text-label-md text-on-surface">Auto-reinvest Dividends</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Summary & Calculations (Col 4) -->
+<div class="col-span-12 lg:col-span-4 space-y-gutter">
+<!-- Projected Summary Bento -->
+<div class="bento-card rounded-xl p-container-padding flex flex-col h-full bg-gradient-to-br from-[#111111] to-[#0a0a0a]">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-8">Performance Projection</h3>
+<div class="mb-auto space-y-8">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1">Projected Corpus at Maturity</p>
+<p class="font-display-lg text-display-lg text-primary tracking-tight font-black">$1,248,892<span class="text-headline-md opacity-50">.00</span></p>
+<div class="flex items-center gap-2 mt-2">
+<span class="bg-secondary/10 text-secondary flex items-center px-2 py-0.5 rounded text-[12px] font-bold">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+                                            +14.2% CAGR
+                                        </span>
+<span class="text-on-surface-variant text-[12px] opacity-60">Estimated returns</span>
+</div>
+</div>
+<!-- Visualization Placeholder -->
+<div class="relative h-32 w-full bg-surface-container-low rounded-lg overflow-hidden border border-outline-variant/30">
+<div class="absolute inset-0 flex items-end">
+<!-- Mock Sparkline -->
+<div class="w-full h-full bg-gradient-to-t from-primary/10 to-transparent"></div>
+<svg class="absolute bottom-0 w-full h-24 text-primary" preserveaspectratio="none" viewbox="0 0 400 100">
+<path d="M0,80 Q50,90 100,60 T200,40 T300,50 T400,20" fill="none" stroke="currentColor" stroke-width="3"></path>
+</svg>
+</div>
+<div class="absolute top-3 left-3 flex gap-2">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-primary/20"></div>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
+<span class="font-label-md text-label-md text-on-surface-variant">Tax Implications</span>
+<span class="font-data-tabular text-on-surface">LTCG (10%)</span>
+</div>
+<div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
+<span class="font-label-md text-label-md text-on-surface-variant">Risk Profile</span>
+<span class="text-error font-label-sm text-label-sm font-bold uppercase tracking-tighter">Moderate-High</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-label-md text-label-md text-on-surface-variant">Maturity Date</span>
+<span class="font-data-tabular text-on-surface">Oct 2028</span>
+</div>
+</div>
+</div>
+<div class="mt-12 space-y-3">
+<button class="w-full bg-primary text-on-primary py-4 rounded-xl font-headline-md text-headline-md flex items-center justify-center gap-3 hover:scale-[0.98] transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bolt</span>
+                                    Commit to Vault
+                                </button>
+<button class="w-full bg-transparent border border-outline-variant text-on-surface-variant py-3 rounded-xl font-label-md text-label-md hover:bg-surface-container-highest transition-all">
+                                    Save as Draft
+                                </button>
+</div>
+</div>
+<!-- Secondary Bento: Market Context -->
+<div class="bento-card rounded-xl p-container-padding flex items-center gap-4">
+<div class="p-3 bg-secondary/10 rounded-lg">
+<span class="material-symbols-outlined text-secondary">insights</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Market Sentiment</p>
+<p class="font-body-md text-body-md text-on-surface">Bullish Outlook for Fintech</p>
+</div>
+<span class="material-symbols-outlined ml-auto text-on-surface-variant opacity-40">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- Bottom spacing for mobile/scroll -->
+<div class="h-margin-desktop"></div>
+</div>
+</main>
+</div>
+<!-- Mobile Navigation Shell (Authority Source: JSON) -->
+<div class="md:hidden fixed bottom-0 left-0 right-0 bg-background border-t border-outline-variant z-50 px-6 py-4 flex justify-between items-center">
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-bold">Dashboard</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<span class="text-[10px] font-bold">Vault</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">file_upload</span>
+<span class="text-[10px] font-bold">Ingestion</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">account_tree</span>
+<span class="text-[10px] font-bold">Mapper</span>
+</button>
+</div>
+</body></html>

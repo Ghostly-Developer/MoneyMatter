@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mutual Funds - MoneyMatter</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-primary": "#494bd6",
+                    "background": "#131313",
+                    "on-tertiary-fixed": "#410004",
+                    "on-error-container": "#ffdad6",
+                    "on-tertiary-container": "#5c0008",
+                    "secondary-fixed-dim": "#4edea3",
+                    "surface-container": "#201f1f",
+                    "tertiary-container": "#ff5451",
+                    "tertiary": "#ffb3ad",
+                    "on-secondary-fixed": "#002113",
+                    "primary-fixed-dim": "#c0c1ff",
+                    "on-surface": "#e5e2e1",
+                    "surface-container-highest": "#353534",
+                    "surface-variant": "#353534",
+                    "on-primary": "#1000a9",
+                    "tertiary-fixed": "#ffdad7",
+                    "secondary-container": "#00a572",
+                    "on-primary-container": "#0d0096",
+                    "tertiary-fixed-dim": "#ffb3ad",
+                    "outline": "#908fa0",
+                    "primary-container": "#8083ff",
+                    "surface-container-lowest": "#0e0e0e",
+                    "surface-container-high": "#2a2a2a",
+                    "error-container": "#93000a",
+                    "surface-bright": "#3a3939",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-surface-variant": "#c7c4d7",
+                    "on-tertiary-fixed-variant": "#930013",
+                    "on-error": "#690005",
+                    "surface-tint": "#c0c1ff",
+                    "surface-dim": "#131313",
+                    "primary-fixed": "#e1e0ff",
+                    "on-secondary-container": "#00311f",
+                    "on-tertiary": "#68000a",
+                    "error": "#ffb4ab",
+                    "surface-container-low": "#1c1b1b",
+                    "inverse-surface": "#e5e2e1",
+                    "on-primary-fixed": "#07006c",
+                    "on-background": "#e5e2e1",
+                    "primary": "#c0c1ff",
+                    "on-secondary": "#003824",
+                    "outline-variant": "#464554",
+                    "secondary": "#4edea3",
+                    "inverse-on-surface": "#313030",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-primary-fixed-variant": "#2f2ebe",
+                    "surface": "#131313"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "margin-mobile": "16px",
+                    "margin-desktop": "40px",
+                    "gutter": "16px",
+                    "container-padding": "24px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "data-tabular": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "data-tabular": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #000000;
+            color: #e5e2e1;
+            font-family: 'Inter', sans-serif;
+        }
+        .bento-card {
+            background-color: #111111;
+            border: 1px solid #1f1f1f;
+            transition: border-color 0.2s ease;
+        }
+        .bento-card:hover {
+            border-color: #333333;
+        }
+        .sparkline-gradient {
+            background: linear-gradient(180deg, rgba(78, 222, 163, 0.1) 0%, rgba(78, 222, 163, 0) 100%);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="flex min-h-screen">
+<!-- SideNavBar Anchor -->
+<aside class="hidden md:flex flex-col h-screen py-container-padding gap-base border-r border-outline-variant bg-surface-container-low w-64 fixed left-0">
+<div class="px-6 mb-8">
+<h1 class="font-headline-md text-headline-md font-black text-primary">MoneyMatter</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant opacity-60">Terminal v1.0</p>
+</div>
+<nav class="flex-1 px-4 space-y-2">
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 font-medium transition-colors duration-200 hover:bg-surface-container-highest rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 bg-primary-container text-on-primary-container rounded-lg px-4 py-3 font-bold" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-md text-label-md">Vault</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 font-medium transition-colors duration-200 hover:bg-surface-container-highest rounded-lg" href="#">
+<span class="material-symbols-outlined">file_upload</span>
+<span class="font-label-md text-label-md">Ingestion</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 font-medium transition-colors duration-200 hover:bg-surface-container-highest rounded-lg" href="#">
+<span class="material-symbols-outlined">account_tree</span>
+<span class="font-label-md text-label-md">Mapper</span>
+</a>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full py-3 px-4 bg-primary text-on-primary font-bold rounded-lg font-label-md text-label-md">
+                Upgrade to Pro
+            </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-64 min-h-screen pb-24 md:pb-12">
+<!-- TopAppBar Anchor -->
+<header class="flex justify-between items-center w-full px-margin-desktop py-4 z-50 border-b border-outline-variant bg-background sticky top-0">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">search</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Search assets, vaults, or movements...</span>
+</div>
+<div class="flex items-center gap-6">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">add_circle</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">settings</span>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant">
+<img alt="User profile switcher" class="w-full h-full object-cover" data-alt="A professional studio headshot of a sophisticated modern business leader. The lighting is dramatic and moody with deep shadows and soft highlights against a dark charcoal background. The individual has a confident, serene expression, wearing high-end minimalist attire that complements the monochromatic and OLED black aesthetic of the financial platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZSWUCygS_PVsUp9nhM3wvgpUEYMDzx1TKnPyX0502HZSTIHGc22X4Q0LROBRUjm5_T5tBnmFHR-aEfx3EQCBPkKZNx2QW3RPpKNLUp913XfaJ7USZIliw90O3K22r9lqpvT-p9cK06nFbk3TdCyhk7ypjPGLbaZFu0zH17tmyV7U5-sWlAI7rpgAxdQ3ULET_ns8XxBmognBu6JGeotRLiA_KrYlENeVa7QnFWgi5HF_gAVLaZ8-YwYjtRLsz29kD3H4mCZbXT2M"/>
+</div>
+</div>
+</header>
+<div class="px-margin-desktop py-8 max-w-[1440px] mx-auto">
+<!-- Group Header -->
+<section class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<nav class="flex items-center gap-2 mb-2 text-on-surface-variant opacity-60">
+<span class="font-label-sm text-label-sm">Vault</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="font-label-sm text-label-sm">Assets</span>
+</nav>
+<h2 class="font-display-lg text-display-lg mb-2">Mutual Funds</h2>
+<div class="flex items-center gap-4">
+<span class="font-headline-md text-headline-md text-on-surface">$1,248,392.42</span>
+<div class="flex items-center gap-1 px-2 py-1 bg-secondary/10 rounded-full">
+<span class="material-symbols-outlined text-secondary text-[16px]">trending_up</span>
+<span class="font-label-sm text-label-sm text-secondary">+12.4%</span>
+</div>
+</div>
+</div>
+<div class="w-full md:w-64 h-16 relative overflow-hidden rounded-lg bento-card p-2 flex items-end">
+<!-- Sparkline Placeholder -->
+<div class="absolute inset-0 flex items-end opacity-50">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 100 40">
+<path d="M0 35 Q 10 32, 20 30 T 40 25 T 60 28 T 80 15 T 100 5 L 100 40 L 0 40 Z" fill="url(#grad)"></path>
+<path d="M0 35 Q 10 32, 20 30 T 40 25 T 60 28 T 80 15 T 100 5" fill="none" stroke="#4edea3" stroke-width="2"></path>
+<defs>
+<lineargradient id="grad" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:#4edea3;stop-opacity:0.2"></stop>
+<stop offset="100%" style="stop-color:#4edea3;stop-opacity:0"></stop>
+</lineargradient>
+</defs>
+</svg>
+</div>
+<span class="relative z-10 font-label-sm text-label-sm text-on-surface-variant ml-2 mb-1">30D Performance</span>
+</div>
+</section>
+<!-- Bento Grid -->
+<div class="grid grid-cols-12 gap-gutter mb-12">
+<!-- Allocation by Category (4 Cols) -->
+<div class="col-span-12 md:col-span-4 bento-card rounded-xl p-container-padding flex flex-col">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-6">Allocation by Category</h3>
+<div class="flex-1 flex flex-col justify-center items-center py-4">
+<div class="relative w-40 h-40">
+<!-- Donut Chart -->
+<svg class="w-full h-full transform -rotate-90">
+<circle cx="80" cy="80" fill="transparent" r="70" stroke="#1f1f1f" stroke-width="20"></circle>
+<circle cx="80" cy="80" fill="transparent" r="70" stroke="#c0c1ff" stroke-dasharray="440" stroke-dashoffset="110" stroke-width="20"></circle>
+<circle cx="80" cy="80" fill="transparent" r="70" stroke="#4edea3" stroke-dasharray="440" stroke-dashoffset="350" stroke-width="20"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-headline-md text-headline-md">75%</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Equity</span>
+</div>
+</div>
+</div>
+<div class="space-y-3 mt-6">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="font-label-md text-label-md">Large Cap Equity</span>
+</div>
+<span class="font-data-tabular text-data-tabular">45%</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="font-label-md text-label-md">Mid Cap &amp; Growth</span>
+</div>
+<span class="font-data-tabular text-data-tabular">30%</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-outline-variant"></div>
+<span class="font-label-md text-label-md">Debt &amp; Liquid</span>
+</div>
+<span class="font-data-tabular text-data-tabular">25%</span>
+</div>
+</div>
+</div>
+<!-- Historical Growth (8 Cols) -->
+<div class="col-span-12 md:col-span-8 bento-card rounded-xl p-container-padding flex flex-col h-[400px]">
+<div class="flex justify-between items-center mb-8">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase">Historical Growth</h3>
+<div class="flex gap-2">
+<button class="px-3 py-1 rounded bg-surface-container-highest text-on-surface font-label-sm text-label-sm">1Y</button>
+<button class="px-3 py-1 rounded text-on-surface-variant font-label-sm text-label-sm hover:bg-surface-container-highest transition-colors">3Y</button>
+<button class="px-3 py-1 rounded text-on-surface-variant font-label-sm text-label-sm hover:bg-surface-container-highest transition-colors">ALL</button>
+</div>
+</div>
+<div class="flex-1 relative">
+<!-- Main Growth Chart -->
+<div class="absolute inset-0 flex items-end">
+<svg class="w-full h-full" preserveaspectratio="none">
+<path d="M0 180 Q 50 160, 100 170 T 200 140 T 300 120 T 400 150 T 500 100 T 600 80 T 700 90 T 800 40 L 800 300 L 0 300 Z" fill="url(#mainGrad)"></path>
+<path d="M0 180 Q 50 160, 100 170 T 200 140 T 300 120 T 400 150 T 500 100 T 600 80 T 700 90 T 800 40" fill="none" stroke="#c0c1ff" stroke-width="3"></path>
+<defs>
+<lineargradient id="mainGrad" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:#c0c1ff;stop-opacity:0.15"></stop>
+<stop offset="100%" style="stop-color:#c0c1ff;stop-opacity:0"></stop>
+</lineargradient>
+</defs>
+</svg>
+</div>
+<!-- Chart Grid lines -->
+<div class="absolute inset-0 border-b border-l border-outline-variant opacity-20"></div>
+</div>
+</div>
+<!-- Top Performers (12 Cols / List Style) -->
+<div class="col-span-12 bento-card rounded-xl overflow-hidden">
+<div class="p-container-padding border-b border-outline-variant">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase">Individual Asset Performance</h3>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-low/50">
+<th class="px-container-padding py-4 font-label-sm text-label-sm text-on-surface-variant opacity-60">Asset Name</th>
+<th class="px-container-padding py-4 font-label-sm text-label-sm text-on-surface-variant opacity-60">Category</th>
+<th class="px-container-padding py-4 font-label-sm text-label-sm text-on-surface-variant opacity-60 text-right">NAV</th>
+<th class="px-container-padding py-4 font-label-sm text-label-sm text-on-surface-variant opacity-60 text-right">Current Value</th>
+<th class="px-container-padding py-4 font-label-sm text-label-sm text-on-surface-variant opacity-60 text-right">Total Returns</th>
+<th class="px-container-padding py-4 font-label-sm text-label-sm text-on-surface-variant opacity-60 text-right">Trend</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-highest transition-colors">
+<td class="px-container-padding py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary">analytics</span>
+</div>
+<div>
+<div class="font-label-md text-label-md">Vanguard Total Stock Index</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">VTSAX • Equity</div>
+</div>
+</div>
+</td>
+<td class="px-container-padding py-5 font-label-md text-label-md">Large Cap</td>
+<td class="px-container-padding py-5 font-data-tabular text-data-tabular text-right">$114.28</td>
+<td class="px-container-padding py-5 font-data-tabular text-data-tabular text-right">$428,291.00</td>
+<td class="px-container-padding py-5 text-right">
+<div class="text-secondary font-label-md text-label-md">+18.2%</div>
+<div class="text-on-surface-variant text-[12px] opacity-60">+$66k</div>
+</td>
+<td class="px-container-padding py-5 text-right">
+<div class="w-24 h-8 inline-block">
+<svg class="w-full h-full" viewbox="0 0 100 40">
+<path d="M0 30 Q 20 25, 40 32 T 80 10 T 100 5" fill="none" stroke="#4edea3" stroke-width="2"></path>
+</svg>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-highest transition-colors">
+<td class="px-container-padding py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary">monitoring</span>
+</div>
+<div>
+<div class="font-label-md text-label-md">Fidelity Blue Chip Growth</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">FBGRX • Tech Focus</div>
+</div>
+</div>
+</td>
+<td class="px-container-padding py-5 font-label-md text-label-md">Growth</td>
+<td class="px-container-padding py-5 font-data-tabular text-data-tabular text-right">$208.12</td>
+<td class="px-container-padding py-5 font-data-tabular text-data-tabular text-right">$315,402.20</td>
+<td class="px-container-padding py-5 text-right">
+<div class="text-secondary font-label-md text-label-md">+24.5%</div>
+<div class="text-on-surface-variant text-[12px] opacity-60">+$62k</div>
+</td>
+<td class="px-container-padding py-5 text-right">
+<div class="w-24 h-8 inline-block">
+<svg class="w-full h-full" viewbox="0 0 100 40">
+<path d="M0 35 Q 25 30, 50 15 T 100 2" fill="none" stroke="#4edea3" stroke-width="2"></path>
+</svg>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-highest transition-colors">
+<td class="px-container-padding py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary">account_balance</span>
+</div>
+<div>
+<div class="font-label-md text-label-md">Schwab S&amp;P 500 Index</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">SWPPX • Passive</div>
+</div>
+</div>
+</td>
+<td class="px-container-padding py-5 font-label-md text-label-md">Index</td>
+<td class="px-container-padding py-5 font-data-tabular text-data-tabular text-right">$64.91</td>
+<td class="px-container-padding py-5 font-data-tabular text-data-tabular text-right">$504,700.22</td>
+<td class="px-container-padding py-5 text-right">
+<div class="text-secondary font-label-md text-label-md">+9.4%</div>
+<div class="text-on-surface-variant text-[12px] opacity-60">+$43k</div>
+</td>
+<td class="px-container-padding py-5 text-right">
+<div class="w-24 h-8 inline-block">
+<svg class="w-full h-full" viewbox="0 0 100 40">
+<path d="M0 25 Q 20 28, 40 22 T 60 25 T 100 18" fill="none" stroke="#4edea3" stroke-width="2"></path>
+</svg>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 border-t border-outline-variant bg-surface-container-low/30 text-center">
+<button class="font-label-sm text-label-sm text-primary hover:underline">View 12 More Funds</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar Anchor (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-lg border-t border-outline-variant flex justify-around items-center py-3 z-50">
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-sm text-label-sm">Dashboard</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-sm text-label-sm">Vault</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-sm text-label-sm">Insights</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</nav>
+</body></html>

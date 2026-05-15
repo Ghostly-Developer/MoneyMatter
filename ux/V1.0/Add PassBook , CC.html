@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#908fa0",
+                        "secondary-container": "#00a572",
+                        "on-primary-fixed": "#07006c",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "inverse-surface": "#e5e2e1",
+                        "on-error-container": "#ffdad6",
+                        "on-error": "#690005",
+                        "tertiary-container": "#ff5451",
+                        "surface-container-highest": "#353534",
+                        "on-primary": "#1000a9",
+                        "secondary": "#4edea3",
+                        "surface-bright": "#3a3939",
+                        "inverse-primary": "#494bd6",
+                        "secondary-fixed": "#6ffbbe",
+                        "surface-tint": "#c0c1ff",
+                        "primary": "#c0c1ff",
+                        "outline-variant": "#464554",
+                        "surface": "#131313",
+                        "on-tertiary-fixed": "#410004",
+                        "on-tertiary-fixed-variant": "#930013",
+                        "on-background": "#e5e2e1",
+                        "on-tertiary-container": "#5c0008",
+                        "on-secondary-fixed-variant": "#005236",
+                        "on-secondary-fixed": "#002113",
+                        "on-secondary": "#003824",
+                        "on-surface": "#e5e2e1",
+                        "surface-container-high": "#2a2a2a",
+                        "error-container": "#93000a",
+                        "on-tertiary": "#68000a",
+                        "primary-container": "#8083ff",
+                        "on-primary-container": "#0d0096",
+                        "tertiary": "#ffb3ad",
+                        "on-secondary-container": "#00311f",
+                        "surface-container-low": "#1c1b1b",
+                        "tertiary-fixed-dim": "#ffb3ad",
+                        "surface-container": "#201f1f",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "inverse-on-surface": "#313030",
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-dim": "#131313",
+                        "secondary-fixed-dim": "#4edea3",
+                        "tertiary-fixed": "#ffdad7",
+                        "background": "#131313",
+                        "surface-variant": "#353534"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "gutter": "16px",
+                        "margin-desktop": "40px",
+                        "container-padding": "24px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "data-tabular": ["Inter"],
+                        "headline-lg-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "data-tabular": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #000000;
+            color: #e5e2e1;
+            font-family: 'Inter', sans-serif;
+        }
+        .bento-card {
+            background-color: #111111;
+            border: 1px solid #1F1F1F;
+            transition: border-color 0.2s ease;
+        }
+        .bento-card:hover {
+            border-color: #333333;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-black overflow-x-hidden">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-screen flex flex-col p-base bg-surface-container-lowest dark:bg-surface-container-lowest border-r border-outline-variant w-64 z-50">
+<div class="mb-10 px-4 pt-4">
+<h1 class="font-headline-sm text-headline-sm font-black text-on-surface dark:text-on-surface">MoneyMatter</h1>
+<p class="font-label-sm text-label-sm text-outline">Personal Finance</p>
+</div>
+<nav class="flex-grow space-y-2">
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">lock</span>
+<span class="font-label-md text-label-md">Vault</span>
+</a>
+<a class="flex items-center gap-3 bg-secondary-container dark:bg-secondary-container text-on-secondary-container dark:text-on-secondary-container rounded-lg px-4 py-2 translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined">upload_file</span>
+<span class="font-label-md text-label-md">Ingestion</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-md text-label-md">Mapper</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-outline-variant space-y-2">
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+<div class="mt-4 px-4 py-4 bg-surface-container rounded-xl flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container">person</span>
+</div>
+<div class="overflow-hidden">
+<p class="font-label-md text-label-md font-bold truncate">Alex Chen</p>
+<p class="font-label-sm text-label-sm text-outline">Premium Tier</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<main class="ml-64 min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-surface flex justify-between items-center w-full px-margin-desktop py-4 max-w-[1440px] sticky top-0 z-40">
+<div class="flex items-center gap-6">
+<h2 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary">Statement &amp; Bill Ingestion</h2>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="bg-black border border-outline-variant rounded-full pl-10 pr-4 py-2 font-label-md text-label-md focus:border-primary focus:ring-1 focus:ring-primary outline-none w-64" placeholder="Search transactions..." type="text"/>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Bento Grid Layout -->
+<div class="p-margin-desktop grid grid-cols-12 gap-gutter max-w-[1440px] w-full">
+<!-- Left Column -->
+<div class="col-span-12 lg:col-span-4 space-y-gutter">
+<!-- Document Category Selection -->
+<div class="bento-card rounded-xl p-container-padding">
+<h3 class="font-label-sm text-label-sm text-outline uppercase tracking-wider mb-6">Document Category</h3>
+<div class="space-y-3">
+<button class="w-full flex items-center justify-between p-4 rounded-lg bg-surface-container-high border border-primary/30 group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">credit_card</span>
+<span class="font-label-md text-label-md">Credit Card</span>
+</div>
+<span class="material-symbols-outlined text-primary">check_circle</span>
+</button>
+<button class="w-full flex items-center justify-between p-4 rounded-lg hover:bg-surface-container-high border border-transparent transition-all group">
+<div class="flex items-center gap-4 text-on-surface-variant group-hover:text-on-surface">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="font-label-md text-label-md">Bank Statement</span>
+</div>
+</button>
+<button class="w-full flex items-center justify-between p-4 rounded-lg hover:bg-surface-container-high border border-transparent transition-all group">
+<div class="flex items-center gap-4 text-on-surface-variant group-hover:text-on-surface">
+<span class="material-symbols-outlined">real_estate_agent</span>
+<span class="font-label-md text-label-md">Loan Statement</span>
+</div>
+</button>
+<button class="w-full flex items-center justify-between p-4 rounded-lg hover:bg-surface-container-high border border-transparent transition-all group">
+<div class="flex items-center gap-4 text-on-surface-variant group-hover:text-on-surface">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label-md text-label-md">Utility Bill</span>
+</div>
+</button>
+</div>
+</div>
+<!-- Security Health Widget -->
+<div class="bento-card rounded-xl p-container-padding relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4">
+<span class="material-symbols-outlined text-secondary opacity-20 text-6xl" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+<h3 class="font-label-sm text-label-sm text-outline uppercase tracking-wider mb-6">Security Health</h3>
+<div class="flex items-end gap-2 mb-2">
+<span class="font-display-lg text-display-lg text-secondary">98</span>
+<span class="font-label-md text-label-md text-outline pb-2">/ 100</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface mb-6">Your data is protected with AES-256 bank-grade encryption before being stored in the Vault.</p>
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary text-sm">check_circle</span>
+<span class="font-label-sm text-label-sm">Zero-Knowledge Architecture</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary text-sm">check_circle</span>
+<span class="font-label-sm text-label-sm">Automatic PII Masking</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary text-sm">check_circle</span>
+<span class="font-label-sm text-label-sm">End-to-End Encrypted Upload</span>
+</div>
+</div>
+</div>
+<!-- Ad/Illustration Card -->
+<div class="bento-card rounded-xl overflow-hidden aspect-video relative group">
+<img class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700" data-alt="A futuristic digital representation of secure data transmission. Glowing lines of indigo and emerald light flow into a central metallic cube representing a vault, set against a deep OLED-black background. The lighting is dramatic and precise, suggesting high-end technology and absolute security in a minimalist digital art style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoca7mdcJvwtk5aw8nHwhxBwl-gF_niyVpBqUVabitrPRRE8wB0OQVh-UNl1e6aifgFbug6t1Tv0QO_-LboltIim6ZkGnqQW6PKh5KYQ6M9Ss0smVM0xTN7IzlNnjxcp22aSidza5w1xfLsZXlmUfvZgfar3PmovkpHgorLzVOzuwMwtIrW0Iei0hE6qrX18bmPQFtKW8q41yHiGR7ePlyqvAhpY9gCwNELhOvG_yLWcifFCWB0I8lAE1UlaH0PKeB_Twyg6Sbwlg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent p-container-padding flex flex-col justify-end">
+<p class="font-headline-md text-headline-md font-bold text-white mb-2">Secure Ingestion</p>
+<p class="font-label-md text-label-md text-on-surface-variant">Every byte is sanitized and secured.</p>
+</div>
+</div>
+</div>
+<!-- Right Column -->
+<div class="col-span-12 lg:col-span-8 space-y-gutter">
+<!-- File Upload Area -->
+<div class="bento-card rounded-xl p-container-padding border-dashed border-2 border-outline-variant hover:border-primary/50 transition-colors cursor-pointer group">
+<div class="flex flex-col items-center justify-center py-12 text-center">
+<div class="w-16 h-16 rounded-full bg-surface-container-high flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-4xl">cloud_upload</span>
+</div>
+<h3 class="font-headline-md text-headline-md mb-2">Drop your files here</h3>
+<p class="font-body-md text-body-md text-outline mb-8 max-w-md">Drag and drop your PDF, JSON, or CSV statements. We'll handle the heavy lifting of data extraction.</p>
+<div class="flex gap-4">
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-container rounded-md font-label-sm text-label-sm text-outline border border-outline-variant">
+<span class="material-symbols-outlined text-sm">description</span> PDF
+                            </div>
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-container rounded-md font-label-sm text-label-sm text-outline border border-outline-variant">
+<span class="material-symbols-outlined text-sm">code</span> JSON
+                            </div>
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-container rounded-md font-label-sm text-label-sm text-outline border border-outline-variant">
+<span class="material-symbols-outlined text-sm">table_view</span> CSV
+                            </div>
+</div>
+</div>
+</div>
+<!-- Metadata Form Area -->
+<div class="bento-card rounded-xl p-container-padding">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="font-headline-md text-headline-md mb-1">Bill/Statement Metadata</h3>
+<p class="font-label-md text-label-md text-outline">Verify the extracted details before saving</p>
+</div>
+<div class="flex items-center gap-3 px-4 py-2 bg-black rounded-full border border-outline-variant">
+<span class="font-label-sm text-label-sm text-outline">Smart Parsing</span>
+<button class="w-10 h-5 bg-secondary rounded-full relative transition-colors">
+<div class="absolute right-1 top-1 w-3 h-3 bg-white rounded-full"></div>
+</button>
+</div>
+</div>
+<form class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="font-label-sm text-label-sm text-outline ml-1">Institution Name</label>
+<input class="w-full bg-black border border-outline-variant rounded-lg px-4 py-3 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none" type="text" value="Chase Bank N.A."/>
+</div>
+<div class="space-y-2">
+<label class="font-label-sm text-label-sm text-outline ml-1">Account/Card Number</label>
+<div class="relative">
+<input class="w-full bg-black border border-outline-variant rounded-lg px-4 py-3 font-data-tabular text-data-tabular focus:border-primary focus:ring-1 focus:ring-primary outline-none" type="text" value="•••• •••• •••• 4291"/>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline cursor-pointer">visibility</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-sm text-label-sm text-outline ml-1">Statement Period</label>
+<input class="w-full bg-black border border-outline-variant rounded-lg px-4 py-3 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none" type="text" value="Oct 01 - Oct 31, 2024"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-sm text-label-sm text-outline ml-1">Due Date</label>
+<div class="relative">
+<input class="w-full bg-black border border-outline-variant rounded-lg px-4 py-3 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none" type="text" value="Nov 15, 2024"/>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline">calendar_today</span>
+</div>
+</div>
+<div class="md:col-span-2 space-y-2">
+<label class="font-label-sm text-label-sm text-outline ml-1">Total Amount Due</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 font-data-tabular text-outline text-lg">$</span>
+<input class="w-full bg-black border border-outline-variant rounded-lg pl-10 pr-4 py-4 font-display-lg text-headline-lg text-secondary focus:border-secondary focus:ring-1 focus:ring-secondary outline-none" type="text" value="1,245.82"/>
+</div>
+</div>
+</form>
+<div class="mt-12 flex gap-4">
+<button class="flex-1 bg-primary text-on-primary py-4 rounded-xl font-headline-md text-headline-md flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined">shield</span>
+                            Add to Vault
+                        </button>
+<button class="px-8 border border-outline-variant text-on-surface hover:bg-surface-container-high rounded-xl transition-colors font-label-md text-label-md">
+                            Cancel
+                        </button>
+</div>
+</div>
+<!-- Recent Activity/Queue Table (High-End pattern) -->
+<div class="bento-card rounded-xl overflow-hidden">
+<div class="p-container-padding flex justify-between items-center border-b border-outline-variant">
+<h3 class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Ingestion Queue</h3>
+<span class="px-2 py-0.5 bg-secondary-container/20 text-secondary text-xs rounded font-bold">3 PENDING</span>
+</div>
+<table class="w-full text-left">
+<thead>
+<tr class="font-label-sm text-label-sm text-outline opacity-60">
+<th class="px-6 py-4 font-normal">DOCUMENT</th>
+<th class="px-6 py-4 font-normal">STATUS</th>
+<th class="px-6 py-4 font-normal text-right">DATE</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/30">
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-error-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-error text-lg">picture_as_pdf</span>
+</div>
+<div>
+<p class="font-label-md text-label-md">Amex_Gold_Oct24.pdf</p>
+<p class="font-label-sm text-label-sm text-outline">Credit Card</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-secondary animate-pulse"></div>
+<span class="font-label-sm text-label-sm text-secondary">Parsing...</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-data-tabular text-data-tabular text-outline">Today, 10:24 AM</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-lg">description</span>
+</div>
+<div>
+<p class="font-label-md text-label-md">Utility_Water_Sept.pdf</p>
+<p class="font-label-sm text-label-sm text-outline">Utility Bill</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-outline"></div>
+<span class="font-label-sm text-label-sm text-outline">Queued</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-data-tabular text-data-tabular text-outline">Today, 09:15 AM</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="mt-auto w-full flex justify-between items-center px-margin-desktop py-6 max-w-[1440px] mx-auto border-t border-outline-variant bg-surface dark:bg-surface">
+<div class="flex items-center gap-6">
+<span class="font-label-sm text-label-sm font-bold text-on-surface dark:text-on-surface">MoneyMatter</span>
+<span class="font-label-sm text-label-sm text-outline">© 2024 MoneyMatter. Data as Light.</span>
+</div>
+<div class="flex gap-8">
+<a class="font-label-sm text-label-sm text-outline hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-outline hover:text-primary transition-colors" href="#">Security Standards</a>
+<a class="font-label-sm text-label-sm text-outline hover:text-primary transition-colors" href="#">API Support</a>
+</div>
+</footer>
+</main>
+</body></html>
