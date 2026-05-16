@@ -1,0 +1,13 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "poc",
+  "outputfilename": "poc",
+  "frontend_install": "npm install",
+  "frontend_build": "npm run build",
+  "frontend_dev_watcher": "npm run dev",
+  "frontend_dev_serverUrl": "auto",
+  "frontend_dir": "frontend",
+  "author": {
+    "name": "Ghostly_Developer"
+  }
+}

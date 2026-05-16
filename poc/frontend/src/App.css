@@ -1,0 +1,121 @@
+#app {
+    height: 100vh;
+    text-align: center;
+}
+
+#logo {
+    display: block;
+    width: 50%;
+    height: 50%;
+    margin: auto;
+    padding: 10% 0 0;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-origin: content-box;
+}
+
+.result {
+    height: 20px;
+    line-height: 20px;
+    margin: 1.5rem auto;
+}
+
+.input-box .btn {
+    width: 60px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 3px;
+    border: none;
+    margin: 0 0 0 20px;
+    padding: 0 8px;
+    cursor: pointer;
+}
+
+.input-box .btn:hover {
+    background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
+    color: #333333;
+}
+
+.input-box .input {
+    border: none;
+    border-radius: 3px;
+    outline: none;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+    background-color: rgba(240, 240, 240, 1);
+    -webkit-font-smoothing: antialiased;
+}
+
+.input-box .input:focus {
+    border: none;
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    max-width: 760px;
+    margin: 0 auto 2rem;
+    padding: 0 1rem;
+}
+
+.form-container label {
+    text-align: left;
+    color: #e2e8f0;
+    font-size: 0.95rem;
+    margin-left: 5px;
+}
+
+.input {
+    border: 1px solid rgba(203, 213, 225, 0.6);
+    border-radius: 6px;
+    outline: none;
+    min-height: 54px;
+    padding: 0.85rem 1rem;
+    background-color: rgba(15, 23, 42, 0.9);
+    color: #f8fafc;
+    font-size: 0.95rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.code-input {
+    min-height: 160px;
+}
+
+.input:hover,
+.input:focus {
+    border-color: rgba(148, 163, 184, 0.9);
+    background-color: rgba(15, 23, 42, 1);
+}
+
+.btn {
+    width: 140px;
+    height: 36px;
+    line-height: 36px;
+    border-radius: 6px;
+    border: none;
+    margin: 0 auto;
+    padding: 0 14px;
+    cursor: pointer;
+    background-color: #2563eb;
+    color: #ffffff;
+}
+
+.btn:hover {
+    background-color: #1d4ed8;
+}
+
+.save-response {
+    margin-top: 0.5rem;
+    color: #c7d2fe;
+    font-size: 0.95rem;
+}
+
+.input-box .input:focus {
+    border: none;
+    background-color: rgba(255, 255, 255, 1);
+}
