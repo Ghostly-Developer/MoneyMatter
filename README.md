@@ -17,3 +17,16 @@ to this in your browser, and you can call your Go code from devtools.
 ## Building
 
 To build a redistributable, production mode package, use `wails build`.
+
+## Commands
+- Run UI  
+npm run dev
+- For UI refersh  
+npm install  
+npm run build  
+cd ..  
+wails build -clean  
+
+- wails dev  
+- wails build  
+- wails build -clean  
