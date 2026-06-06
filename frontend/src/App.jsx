@@ -1,27 +1,34 @@
-import {useState} from 'react';
+import { useState } from 'react';
 import './App.css';
-import {Greet} from "../wailsjs/go/main/App";
-import { Header } from './components/Header';
-import { Sidebar } from './components/Sidebar';
-import { Footer } from './components/Footer';
+import { Box, Button, Stack } from '@mui/material';
+import { InsertTranscation } from './components/InsertTranscation';
+import { ViewTranscation } from './components/ViewTranscation';
 
 function App() {
-    const [resultText, setResultText] = useState("Please enter your name below 👇");
-    const [name, setName] = useState('');
-    const updateName = (e) => setName(e.target.value);
-    const updateResultText = (result) => setResultText(result);
-
-    function greet() {
-        Greet(name).then(updateResultText);
-    }
+    const [page, setPage] = useState('add');
 
     return (
         <div id="App" className='Dark'>
-            <Header />
-            <Sidebar />
-            <Footer />
+            <Box sx={{ p: 2, display: 'flex', justifyContent: 'flex-start', gap: 1, flexWrap: 'wrap' }}>
+                <Button
+                    variant={page === 'add' ? 'contained' : 'outlined'}
+                    onClick={() => setPage('add')}
+                >
+                    Add Transaction
+                </Button>
+                <Button
+                    variant={page === 'view' ? 'contained' : 'outlined'}
+                    onClick={() => setPage('view')}
+                >
+                    View Transaction
+                </Button>
+            </Box>
+
+            <Box sx={{ p: 2 }}>
+                {page === 'add' ? <InsertTranscation /> : <ViewTranscation />}
+            </Box>
         </div>
-    )
+    );
 }
 
-export default App
+export default App;
