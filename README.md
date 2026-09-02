@@ -37,3 +37,9 @@ wails build -clean
 - wails dev  
 - wails build  
 - wails build -clean  
+
+## GitHub Pages
+
+Pushes to `POC` build and publish the UI through GitHub Pages. In the repository settings, set
+**Pages > Build and deployment > Source** to **GitHub Actions**. Pull requests run the UI build without
+publishing a deployment.
