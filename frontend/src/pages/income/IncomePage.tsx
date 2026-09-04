@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FilePlus, X } from 'lucide-react';
 import { IncomeOverview } from './IncomeOverview';
 import { BANK_OPTIONS } from '../../constants/banks';
+import { getAccentTokens, type AccentColor } from '../../constants/accentColors';
 
 interface IncomeStream {
   id: string;
@@ -13,10 +14,25 @@ interface IncomeStream {
 
 interface IncomePageProps {
   theme?: 'dark' | 'light';
+  accent?: AccentColor;
   onAddPayslip?: (stream: IncomeStream) => void;
 }
 
-export function IncomePage({ theme = 'dark', onAddPayslip = (stream) => console.log('Add payslip for', stream) }: IncomePageProps) {
+export function IncomePage({
+  theme = 'dark',
+  accent = 'green',
+  onAddPayslip = (stream) => console.log('Add payslip for', stream),
+}: IncomePageProps) {
+  const t = getAccentTokens(theme, accent);
+  const accentVars = {
+    '--accent-solid': t.solid,
+    '--accent-solid-hover': t.solidHover,
+    '--accent-pastel-bg': t.pastelBg,
+    '--accent-pastel-text': t.pastelText,
+    '--accent-hover-text': t.hoverText,
+    '--accent-tint-bg': t.tintBg,
+    '--accent-tint-border': t.tintBorder,
+  } as React.CSSProperties;
   const [streams, setStreams] = useState<IncomeStream[]>([]);
   const [activeTab, setActiveTab] = useState<string>('');
   const [modalOpen, setModalOpen] = useState(false);
@@ -56,7 +72,7 @@ export function IncomePage({ theme = 'dark', onAddPayslip = (stream) => console.
   };
 
   return (
-    <div>
+    <div style={accentVars}>
       {/* Sub-navbar */}
       {streams.length > 0 && (
         <div className="flex items-center justify-between mb-8 gap-4 flex-wrap">
@@ -71,9 +87,7 @@ export function IncomePage({ theme = 'dark', onAddPayslip = (stream) => console.
                 onClick={() => setActiveTab(stream.id)}
                 className={`px-4 py-2 rounded-full text-[13px] font-medium tracking-wide transition-colors ${
                   activeTab === stream.id
-                    ? theme === 'dark'
-                      ? 'bg-[#052e1c] text-[#6ee7b7] font-semibold'
-                      : 'bg-[#d1fae5] text-[#065f46] font-semibold'
+                    ? 'bg-[var(--accent-pastel-bg)] text-[var(--accent-pastel-text)] font-semibold'
                     : theme === 'dark'
                     ? 'text-[#c7c4d7] hover:bg-[#201f1f]'
                     : 'text-[#464554] hover:bg-white'
@@ -87,9 +101,7 @@ export function IncomePage({ theme = 'dark', onAddPayslip = (stream) => console.
           {activeStream && (
             <button
               onClick={() => activeStream && onAddPayslip(activeStream)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-semibold tracking-wide text-white shadow-sm transition-colors shrink-0 ${
-                theme === 'dark' ? 'bg-[#10b981] hover:bg-[#059669]' : 'bg-[#059669] hover:bg-[#047857]'
-              }`}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-semibold tracking-wide text-white shadow-sm transition-colors shrink-0 bg-[var(--accent-solid)] hover:bg-[var(--accent-solid-hover)]"
             >
               <FilePlus size={16} />
               Add Payslip
@@ -100,7 +112,7 @@ export function IncomePage({ theme = 'dark', onAddPayslip = (stream) => console.
 
       {/* Content */}
       {!activeStream ? (
-        <IncomeOverview theme={theme} streams={streams} onOpenAddStream={() => setModalOpen(true)} />
+        <IncomeOverview theme={theme} accent={accent} streams={streams} onOpenAddStream={() => setModalOpen(true)} />
       ) : (
         <div
           className={`rounded-xl border p-6 ${
@@ -150,10 +162,10 @@ export function IncomePage({ theme = 'dark', onAddPayslip = (stream) => console.
                   onChange={(e) => setNewStreamName(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleAddStream()}
                   placeholder="e.g. Salary, Freelance"
-                  className={`w-full rounded-xl px-3.5 py-2.5 text-sm border outline-none transition-colors ${
+                  className={`w-full rounded-xl px-3.5 py-2.5 text-sm border outline-none transition-colors focus:border-[var(--accent-solid)] ${
                     theme === 'dark'
-                      ? 'bg-[#201f1f] border-[#2d2c38] text-[#e5e2e1] focus:border-[#10b981]'
-                      : 'bg-[#f8f9ff] border-[#c7c4d7] text-[#0b1c30] focus:border-[#059669]'
+                      ? 'bg-[#201f1f] border-[#2d2c38] text-[#e5e2e1]'
+                      : 'bg-[#f8f9ff] border-[#c7c4d7] text-[#0b1c30]'
                   }`}
                 />
               </div>
@@ -170,9 +182,7 @@ export function IncomePage({ theme = 'dark', onAddPayslip = (stream) => console.
                       onClick={() => handleStreamTypeChange('account')}
                       className={`px-4 py-1.5 rounded-md text-[12px] font-semibold tracking-wide transition-colors ${
                         newStreamType === 'account'
-                          ? theme === 'dark'
-                            ? 'bg-[#052e1c] text-[#6ee7b7]'
-                            : 'bg-[#d1fae5] text-[#065f46]'
+                          ? 'bg-[var(--accent-pastel-bg)] text-[var(--accent-pastel-text)]'
                           : theme === 'dark'
                           ? 'text-[#c7c4d7]'
                           : 'text-[#767586]'
@@ -184,9 +194,7 @@ export function IncomePage({ theme = 'dark', onAddPayslip = (stream) => console.
                       onClick={() => handleStreamTypeChange('cash')}
                       className={`px-4 py-1.5 rounded-md text-[12px] font-semibold tracking-wide transition-colors ${
                         newStreamType === 'cash'
-                          ? theme === 'dark'
-                            ? 'bg-[#052e1c] text-[#6ee7b7]'
-                            : 'bg-[#d1fae5] text-[#065f46]'
+                          ? 'bg-[var(--accent-pastel-bg)] text-[var(--accent-pastel-text)]'
                           : theme === 'dark'
                           ? 'text-[#c7c4d7]'
                           : 'text-[#767586]'
@@ -205,10 +213,10 @@ export function IncomePage({ theme = 'dark', onAddPayslip = (stream) => console.
                     <select
                       value={newStreamBank}
                       onChange={(e) => setNewStreamBank(e.target.value)}
-                      className={`w-full rounded-xl px-3.5 py-2.5 text-sm border outline-none transition-colors ${
+                      className={`w-full rounded-xl px-3.5 py-2.5 text-sm border outline-none transition-colors focus:border-[var(--accent-solid)] ${
                         theme === 'dark'
-                          ? 'bg-[#201f1f] border-[#2d2c38] text-[#e5e2e1] focus:border-[#10b981]'
-                          : 'bg-[#f8f9ff] border-[#c7c4d7] text-[#0b1c30] focus:border-[#059669]'
+                          ? 'bg-[#201f1f] border-[#2d2c38] text-[#e5e2e1]'
+                          : 'bg-[#f8f9ff] border-[#c7c4d7] text-[#0b1c30]'
                       }`}
                     >
                       {BANK_OPTIONS.map((bank) => (
@@ -232,9 +240,7 @@ export function IncomePage({ theme = 'dark', onAddPayslip = (stream) => console.
                     onClick={() => setNewStreamTaxable(true)}
                     className={`px-4 py-1.5 rounded-md text-[12px] font-semibold tracking-wide transition-colors ${
                       newStreamTaxable
-                        ? theme === 'dark'
-                          ? 'bg-[#052e1c] text-[#6ee7b7]'
-                          : 'bg-[#d1fae5] text-[#065f46]'
+                        ? 'bg-[var(--accent-pastel-bg)] text-[var(--accent-pastel-text)]'
                         : theme === 'dark'
                         ? 'text-[#c7c4d7]'
                         : 'text-[#767586]'
@@ -246,9 +252,7 @@ export function IncomePage({ theme = 'dark', onAddPayslip = (stream) => console.
                     onClick={() => setNewStreamTaxable(false)}
                     className={`px-4 py-1.5 rounded-md text-[12px] font-semibold tracking-wide transition-colors ${
                       !newStreamTaxable
-                        ? theme === 'dark'
-                          ? 'bg-[#052e1c] text-[#6ee7b7]'
-                          : 'bg-[#d1fae5] text-[#065f46]'
+                        ? 'bg-[var(--accent-pastel-bg)] text-[var(--accent-pastel-text)]'
                         : theme === 'dark'
                         ? 'text-[#c7c4d7]'
                         : 'text-[#767586]'
@@ -274,9 +278,7 @@ export function IncomePage({ theme = 'dark', onAddPayslip = (stream) => console.
               <button
                 onClick={handleAddStream}
                 disabled={!newStreamName.trim()}
-                className={`px-4 py-2.5 rounded-xl text-[13px] font-semibold tracking-wide text-white shadow-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
-                  theme === 'dark' ? 'bg-[#10b981] hover:bg-[#059669]' : 'bg-[#059669] hover:bg-[#047857]'
-                }`}
+                className="px-4 py-2.5 rounded-xl text-[13px] font-semibold tracking-wide text-white shadow-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed bg-[var(--accent-solid)] hover:bg-[var(--accent-solid-hover)]"
               >
                 Add Stream
               </button>

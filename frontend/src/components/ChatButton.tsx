@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { BotMessageSquare } from 'lucide-react';
+import { getAccentTokens, type AccentColor } from '../constants/accentColors';
 
 interface ChatButtonProps {
   onClick?: () => void;
   theme?: 'dark' | 'light';
+  accent?: AccentColor;
 }
 
 const STORAGE_KEY = 'chatButtonTopPosition';
@@ -21,7 +23,8 @@ function clampTop(top: number) {
   return Math.min(Math.max(top, min), max);
 }
 
-export function ChatButton({ onClick = () => {}, theme = 'dark' }: ChatButtonProps) {
+export function ChatButton({ onClick = () => {}, theme = 'dark', accent = 'green' }: ChatButtonProps) {
+  const t = getAccentTokens(theme, accent);
   const [top, setTop] = useState<number>(() => {
     const stored = Number(localStorage.getItem(STORAGE_KEY));
     return stored ? clampTop(stored) : getDefaultTop();
@@ -74,13 +77,14 @@ export function ChatButton({ onClick = () => {}, theme = 'dark' }: ChatButtonPro
       onPointerUp={handlePointerUp}
       aria-label="Open AI chat"
       title="AI Chat"
-      style={{ top: `${top}px`, touchAction: 'none' }}
+      style={{
+        top: `${top}px`,
+        touchAction: 'none',
+        backgroundImage: `linear-gradient(to bottom right, ${t.gradientFrom}, ${t.gradientTo})`,
+        boxShadow: `0 10px 15px -3px ${t.solid}40, 0 4px 6px -4px ${t.solid}40`,
+      }}
       className={`fixed right-0 z-50 rounded-l-full py-2.5 pl-2.5 pr-3 text-white flex items-center justify-center shadow-lg select-none ${
         isDragging ? 'cursor-grabbing transition-colors' : 'cursor-grab transition-all hover:pr-4'
-      } ${
-        theme === 'dark'
-          ? 'bg-gradient-to-br from-[#10b981] to-[#34d399] shadow-[#10b981]/30'
-          : 'bg-gradient-to-br from-[#059669] to-[#10b981] shadow-[#059669]/20'
       }`}
     >
       <BotMessageSquare size={26} />

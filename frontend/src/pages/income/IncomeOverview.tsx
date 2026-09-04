@@ -26,6 +26,7 @@ import {
   Cell,
 } from 'recharts';
 import { BANK_OPTIONS } from '../../constants/banks';
+import { getAccentTokens, type AccentColor } from '../../constants/accentColors';
 
 interface IncomeStreamOption {
   id: string;
@@ -43,6 +44,7 @@ export interface PayslipFormData {
 
 interface IncomeOverviewProps {
   theme?: 'dark' | 'light';
+  accent?: AccentColor;
   streams?: IncomeStreamOption[];
   onOpenAddStream?: () => void;
   onSubmitPayslip?: (data: PayslipFormData) => void;
@@ -158,24 +160,35 @@ type StreamFilter = 'all' | string;
 
 export function IncomeOverview({
   theme = 'dark',
+  accent = 'green',
   streams = [],
   onOpenAddStream = () => {},
   onSubmitPayslip = (data) => console.log('Add payslip', data),
 }: IncomeOverviewProps) {
   const isDark = theme === 'dark';
+  const t = getAccentTokens(theme, accent);
+  const accentVars = {
+    '--accent-solid': t.solid,
+    '--accent-solid-hover': t.solidHover,
+    '--accent-pastel-bg': t.pastelBg,
+    '--accent-pastel-text': t.pastelText,
+    '--accent-hover-text': t.hoverText,
+    '--accent-tint-bg': t.tintBg,
+    '--accent-tint-border': t.tintBorder,
+  } as React.CSSProperties;
   const cardBg = isDark ? 'bg-[#1a1a1a] border-[#2d2c38]/60' : 'bg-white border-[#E2E8F0]';
   const mutedText = isDark ? 'text-[#8e8ca0]' : 'text-[#767586]';
   const gridColor = isDark ? '#2d2c38' : '#e5e7eb';
   const axisColor = isDark ? '#8e8ca0' : '#767586';
   const labelClass = `block text-[10px] uppercase font-bold tracking-wider mb-2 ${mutedText}`;
-  const inputClass = `w-full rounded-xl px-3.5 py-2.5 text-sm border outline-none transition-colors ${
+  const inputClass = `w-full rounded-xl px-3.5 py-2.5 text-sm border outline-none transition-colors focus:border-[var(--accent-solid)] ${
     isDark
-      ? 'bg-[#201f1f] border-[#2d2c38] text-[#e5e2e1] focus:border-[#10b981]'
-      : 'bg-[#f8f9ff] border-[#c7c4d7] text-[#0b1c30] focus:border-[#059669]'
+      ? 'bg-[#201f1f] border-[#2d2c38] text-[#e5e2e1]'
+      : 'bg-[#f8f9ff] border-[#c7c4d7] text-[#0b1c30]'
   }`;
 
   const [viewMode, setViewMode] = useState<ViewMode>('dashboard');
-  const [dateRange, setDateRange] = useState<DateRange>('3m');
+  const [dateRange, setDateRange] = useState<DateRange>('12m');
   const [customFrom, setCustomFrom] = useState('');
   const [customTo, setCustomTo] = useState('');
   const [accountFilter, setAccountFilter] = useState<AccountFilter>('all');
@@ -192,11 +205,9 @@ export function IncomeOverview({
   const [payslipYear, setPayslipYear] = useState('');
   const [payslipFile, setPayslipFile] = useState<File | null>(null);
 
-  const pillActive = isDark ? 'bg-[#052e1c] text-[#6ee7b7]' : 'bg-[#d1fae5] text-[#065f46]';
+  const pillActive = 'bg-[var(--accent-pastel-bg)] text-[var(--accent-pastel-text)]';
   const pillInactive = isDark ? 'text-[#c7c4d7] hover:bg-[#201f1f]' : 'text-[#464554] hover:bg-white';
-  const viewToggleActive = isDark
-    ? 'bg-[#10b981] hover:bg-[#059669] text-white shadow-sm'
-    : 'bg-[#059669] hover:bg-[#047857] text-white shadow-sm';
+  const viewToggleActive = 'bg-[var(--accent-solid)] hover:bg-[var(--accent-solid-hover)] text-white shadow-sm';
   const viewToggleInactive = isDark ? 'text-[#c7c4d7] hover:bg-[#201f1f]' : 'text-[#464554] hover:bg-white';
 
   const closePayslipModal = () => {
@@ -231,11 +242,11 @@ export function IncomeOverview({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" style={accentVars}>
       {/* Header card */}
       <div
         className={`rounded-2xl border p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-5 ${
-          isDark ? 'bg-[#052e1c]/30 border-[#065f46]/40' : 'bg-[#ecfdf5] border-[#a7f3d0]'
+          isDark ? 'bg-[var(--accent-tint-bg)]/30 border-[var(--accent-tint-border)]/40' : 'bg-[var(--accent-tint-bg)] border-[var(--accent-tint-border)]'
         }`}
       >
         <div>
@@ -249,7 +260,7 @@ export function IncomeOverview({
         <div className="flex items-center gap-2.5 shrink-0">
           <div
             className={`inline-flex items-center gap-1 p-1 rounded-xl border shrink-0 ${
-              isDark ? 'bg-[#1a1a1a] border-[#2d2c38]/60' : 'bg-white border-[#a7f3d0]'
+              isDark ? 'bg-[#1a1a1a] border-[#2d2c38]/60' : 'bg-white border-[var(--accent-tint-border)]'
             }`}
           >
             <button
@@ -292,7 +303,7 @@ export function IncomeOverview({
           <button
             onClick={onOpenAddStream}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-semibold tracking-wide text-white shadow-sm transition-colors ${
-              isDark ? 'bg-[#10b981] hover:bg-[#059669]' : 'bg-[#059669] hover:bg-[#047857]'
+              'bg-[var(--accent-solid)] hover:bg-[var(--accent-solid-hover)]'
             }`}
           >
             <CirclePlus size={16} />
@@ -335,8 +346,8 @@ export function IncomeOverview({
                 onChange={(e) => setCustomFrom(e.target.value)}
                 className={`rounded-lg px-2.5 py-1.5 text-[12px] border outline-none transition-colors ${
                   isDark
-                    ? 'bg-[#201f1f] border-[#2d2c38] text-[#e5e2e1] focus:border-[#10b981]'
-                    : 'bg-[#f8f9ff] border-[#c7c4d7] text-[#0b1c30] focus:border-[#059669]'
+                    ? 'bg-[#201f1f] border-[#2d2c38] text-[#e5e2e1] focus:border-[var(--accent-solid)]'
+                    : 'bg-[#f8f9ff] border-[#c7c4d7] text-[#0b1c30] focus:border-[var(--accent-solid)]'
                 }`}
               />
               <span className={`text-[12px] ${mutedText}`}>to</span>
@@ -346,8 +357,8 @@ export function IncomeOverview({
                 onChange={(e) => setCustomTo(e.target.value)}
                 className={`rounded-lg px-2.5 py-1.5 text-[12px] border outline-none transition-colors ${
                   isDark
-                    ? 'bg-[#201f1f] border-[#2d2c38] text-[#e5e2e1] focus:border-[#10b981]'
-                    : 'bg-[#f8f9ff] border-[#c7c4d7] text-[#0b1c30] focus:border-[#059669]'
+                    ? 'bg-[#201f1f] border-[#2d2c38] text-[#e5e2e1] focus:border-[var(--accent-solid)]'
+                    : 'bg-[#f8f9ff] border-[#c7c4d7] text-[#0b1c30] focus:border-[var(--accent-solid)]'
                 }`}
               />
             </div>
@@ -405,7 +416,7 @@ export function IncomeOverview({
         <button
           onClick={() => setPayslipModalOpen(true)}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-semibold tracking-wide text-white shadow-sm transition-colors ml-auto ${
-            isDark ? 'bg-[#10b981] hover:bg-[#059669]' : 'bg-[#059669] hover:bg-[#047857]'
+            'bg-[var(--accent-solid)] hover:bg-[var(--accent-solid-hover)]'
           }`}
         >
           <FilePlusCorner size={16} />
@@ -571,7 +582,7 @@ export function IncomeOverview({
             </div>
             <span
               className={`px-2 py-1 rounded-lg text-[11px] font-bold shrink-0 ${
-                isDark ? 'bg-[#052e1c] text-[#6ee7b7]' : 'bg-[#d1fae5] text-[#065f46]'
+                'bg-[var(--accent-pastel-bg)] text-[var(--accent-pastel-text)]'
               }`}
             >
               High (0.84)
@@ -679,7 +690,7 @@ export function IncomeOverview({
                       setPayslipModalOpen(false);
                       onOpenAddStream();
                     }}
-                    className={`mt-2 text-[12px] font-semibold tracking-wide ${isDark ? 'text-[#6ee7b7] hover:text-[#a7f3d0]' : 'text-[#059669] hover:text-[#047857]'}`}
+                    className={`mt-2 text-[12px] font-semibold tracking-wide hover:text-[var(--accent-hover-text)] ${isDark ? 'text-[var(--accent-pastel-text)]' : 'text-[var(--accent-solid)]'}`}
                   >
                     + Add an income stream first
                   </button>
@@ -781,8 +792,8 @@ export function IncomeOverview({
                 <label
                   className={`flex items-center gap-2 rounded-xl px-3.5 py-2.5 text-[12px] border border-dashed cursor-pointer transition-colors ${
                     isDark
-                      ? 'bg-[#201f1f] border-[#2d2c38] text-[#8e8ca0] hover:border-[#10b981]'
-                      : 'bg-[#f8f9ff] border-[#c7c4d7] text-[#767586] hover:border-[#059669]'
+                      ? 'bg-[#201f1f] border-[#2d2c38] text-[#8e8ca0] hover:border-[var(--accent-solid)]'
+                      : 'bg-[#f8f9ff] border-[#c7c4d7] text-[#767586] hover:border-[var(--accent-solid)]'
                   }`}
                 >
                   <Upload size={15} />
@@ -810,7 +821,7 @@ export function IncomeOverview({
                 onClick={handleSubmitPayslip}
                 disabled={!payslipStreamId || !payslipMonth || !payslipYear}
                 className={`px-4 py-2.5 rounded-xl text-[13px] font-semibold tracking-wide text-white shadow-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
-                  isDark ? 'bg-[#10b981] hover:bg-[#059669]' : 'bg-[#059669] hover:bg-[#047857]'
+                  'bg-[var(--accent-solid)] hover:bg-[var(--accent-solid-hover)]'
                 }`}
               >
                 Submit

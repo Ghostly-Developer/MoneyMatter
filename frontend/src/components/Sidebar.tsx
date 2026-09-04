@@ -1,5 +1,6 @@
 import React from 'react';
 import { LayoutDashboard, Lock, Wallet, Settings, LifeBuoy, Heart, PanelLeftClose, PanelLeftOpen, User, Banknote, TrendingUp, Receipt, Landmark } from 'lucide-react';
+import { getAccentTokens, type AccentColor } from '../constants/accentColors';
 
 interface SidebarProps {
   currentTab?: string;
@@ -7,6 +8,7 @@ interface SidebarProps {
   onOpenSettings?: () => void;
   onOpenSupport?: () => void;
   theme?: 'dark' | 'light';
+  accent?: AccentColor;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
 }
@@ -17,9 +19,11 @@ export function Sidebar({
   onOpenSettings = () => {},
   onOpenSupport = () => {},
   theme = 'dark',
+  accent = 'green',
   collapsed = false,
   onToggleCollapse = () => {},
 }: SidebarProps) {
+  const t = getAccentTokens(theme, accent);
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'account', label: 'Account', icon: User },
@@ -46,11 +50,13 @@ export function Sidebar({
             onClick={() => onSelectTab('dashboard')}
             className="flex items-center gap-3 cursor-pointer group min-w-0"
           >
-            <div className={`w-10 h-10 shrink-0 rounded-lg text-white flex items-center justify-center font-black text-lg shadow-lg transition-transform group-hover:scale-105 ${
-              theme === 'dark'
-                ? 'bg-gradient-to-br from-[#10b981] to-[#34d399] shadow-[#10b981]/30'
-                : 'bg-gradient-to-br from-[#059669] to-[#10b981] shadow-[#059669]/20'
-            }`}>
+            <div
+              className="w-10 h-10 shrink-0 rounded-lg text-white flex items-center justify-center font-black text-lg shadow-lg transition-transform group-hover:scale-105"
+              style={{
+                backgroundImage: `linear-gradient(to bottom right, ${t.gradientFrom}, ${t.gradientTo})`,
+                boxShadow: `0 10px 15px -3px ${t.solid}40, 0 4px 6px -4px ${t.solid}40`,
+              }}
+            >
               M
             </div>
             {!collapsed && (
@@ -58,7 +64,7 @@ export function Sidebar({
                 <h1 className={`text-[16px] font-black tracking-tight leading-tight ${
                   theme === 'dark' ? 'text-[#e5e2e1]' : 'text-[#0b1c30]'
                 }`}>
-                  Money<span className={theme === 'dark' ? 'text-[#10b981]' : 'text-[#059669]'}>Matter</span>
+                  Money<span style={{ color: t.solid }}>Matter</span>
                 </h1>
                 <p className={`text-[9px] tracking-widest uppercase font-semibold ${
                   theme === 'dark' ? 'text-[#8e8ca0]' : 'text-[#767586]'
@@ -108,13 +114,12 @@ export function Sidebar({
                 key={item.id}
                 onClick={() => onSelectTab(item.id)}
                 title={collapsed ? item.label : undefined}
+                style={isActive ? { backgroundColor: t.pastelBg, color: t.pastelText } : undefined}
                 className={`w-full flex items-center gap-3.5 py-3 rounded-lg text-left transition-all duration-150 ${
                   collapsed ? 'justify-center px-0' : 'px-4'
                 } ${
                   isActive
-                    ? theme === 'dark'
-                      ? 'bg-[#052e1c] text-[#6ee7b7] font-semibold'
-                      : 'bg-[#d1fae5] text-[#065f46] font-semibold'
+                    ? 'font-semibold'
                     : theme === 'dark'
                     ? 'text-[#c7c4d7] hover:bg-[#201f1f]'
                     : 'text-[#464554] hover:bg-[#eff4ff]'
@@ -122,11 +127,10 @@ export function Sidebar({
               >
                 <item.icon
                   size={20}
+                  style={isActive ? { color: t.pastelText } : undefined}
                   className={`shrink-0 ${
                     isActive
-                      ? theme === 'dark'
-                        ? 'text-[#6ee7b7]'
-                        : 'text-[#065f46]'
+                      ? ''
                       : theme === 'dark'
                       ? 'text-[#c7c4d7]'
                       : 'text-[#464554]'
