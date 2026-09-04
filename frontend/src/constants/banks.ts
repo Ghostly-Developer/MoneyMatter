@@ -1,0 +1,16 @@
+export const BANK_OPTIONS = [
+  'None',
+  'State Bank of India',
+  'HDFC Bank',
+  'ICICI Bank',
+  'Axis Bank',
+  'Punjab National Bank',
+  'Bank of Baroda',
+  'Kotak Mahindra Bank',
+  'Canara Bank',
+  'Union Bank of India',
+  'IDBI Bank',
+  'Yes Bank',
+  'IndusInd Bank',
+  'Other',
+];

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, ChevronDown, Check, CirclePlus, Bell, Moon, Sun } from 'lucide-react';
+import { Search, ChevronDown, CirclePlus, Bell, Moon, Sun, Pencil } from 'lucide-react';
 
 interface Profile {
   id: string;
@@ -11,6 +11,7 @@ interface HeaderProps {
   currentProfile?: Profile;
   profiles?: Profile[];
   onSelectProfile?: (profile: Profile) => void;
+  onEditProfile?: (profile: Profile) => void;
   onOpenSearch?: () => void;
   onOpenAddTransaction?: () => void;
   onOpenAlerts?: () => void;
@@ -34,6 +35,7 @@ export function Header({
     { id: '2', name: 'Joint Account', avatar: 'J' },
   ],
   onSelectProfile = () => {},
+  onEditProfile = () => {},
   onOpenSearch = () => {},
   onOpenAddTransaction = () => {},
   onOpenAlerts = () => {},
@@ -92,21 +94,21 @@ export function Header({
             size={20}
             className={`mr-2 transition-colors ${
               currentTheme === 'dark'
-                ? 'text-[#c7c4d7] group-hover:text-white'
-                : 'text-[#767586] group-hover:text-[#4648d4]'
+                ? 'text-[#c7c4d7]'
+                : 'text-[#767586]'
             }`}
           />
           <span className={`text-[13px] w-full transition-colors select-none ${
             currentTheme === 'dark'
-              ? 'text-[#8e8ca0] group-hover:text-[#c7c4d7]'
-              : 'text-[#767586] group-hover:text-[#0b1c30]'
+              ? 'text-[#8e8ca0]'
+              : 'text-[#767586]'
           }`}>
             Search commands, assets, or reports...
           </span>
           <span className={`text-[11px] font-semibold rounded px-1.5 py-0.5 ml-2 tracking-widest font-mono ${
             currentTheme === 'dark'
               ? 'text-[#8e8ca0] bg-[#131313] border border-[#353534]'
-              : 'text-[#767586] bg-[#eff4ff] border border-[#4648d4]'
+              : 'text-[#767586] bg-[#eff4ff] border border-[#059669]'
           }`}>
             ⌘K
           </span>
@@ -125,7 +127,7 @@ export function Header({
               }`}
             >
               <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white shadow-sm ${
-                currentTheme === 'dark' ? 'bg-[#6366f1]' : 'bg-[#4648d4]'
+                currentTheme === 'dark' ? 'bg-[#10b981]' : 'bg-[#059669]'
               }`}>
                 {currentProfile.avatar}
               </div>
@@ -164,17 +166,25 @@ export function Header({
                   </div>
                   <div className="py-1">
                     {profiles.map((p) => (
-                      <button
+                      <div
                         key={p.id}
+                        role="button"
+                        tabIndex={0}
                         onClick={() => {
                           onSelectProfile(p);
                           setProfileDropdownOpen(false);
                         }}
-                        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left text-[13px] transition-colors ${
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            onSelectProfile(p);
+                            setProfileDropdownOpen(false);
+                          }
+                        }}
+                        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left text-[13px] transition-colors cursor-pointer ${
                           p.id === currentProfile.id
                             ? currentTheme === 'dark'
-                              ? 'bg-[#6366f1]/20 text-[#c0c1ff] font-semibold'
-                              : 'bg-[#4648d4]/20 text-[#4648d4] font-semibold'
+                              ? 'bg-[#10b981]/20 text-[#6ee7b7] font-semibold'
+                              : 'bg-[#059669]/20 text-[#059669] font-semibold'
                             : currentTheme === 'dark'
                             ? 'text-[#e5e2e1] hover:bg-[#2a2a2a]'
                             : 'text-[#0b1c30] hover:bg-[#eff4ff]'
@@ -190,13 +200,23 @@ export function Header({
                           </span>
                           <span>{p.name}</span>
                         </div>
-                        {p.id === currentProfile.id && (
-                          <Check
-                            size={16}
-                            className={currentTheme === 'dark' ? 'text-[#6366f1]' : 'text-[#4648d4]'}
-                          />
-                        )}
-                      </button>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onEditProfile(p);
+                            }}
+                            title={`Edit ${p.name}`}
+                            className={`p-1 rounded-md transition-colors ${
+                              currentTheme === 'dark'
+                                ? 'text-[#8e8ca0] hover:bg-[#353534] hover:text-[#e5e2e1]'
+                                : 'text-[#767586] hover:bg-white hover:text-[#0b1c30]'
+                            }`}
+                          >
+                            <Pencil size={14} />
+                          </button>
+                        </div>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -211,8 +231,8 @@ export function Header({
               title="Add Transaction or Asset"
               className={`p-1.5 rounded-lg transition-all ${
                 currentTheme === 'dark'
-                  ? 'text-[#c7c4d7] hover:text-[#4edea3] hover:bg-[#201f1f]'
-                  : 'text-[#767586] hover:text-[#4648d4] hover:bg-[#eff4ff]'
+                  ? 'text-[#c7c4d7] hover:bg-[#201f1f]'
+                  : 'text-[#767586] hover:bg-[#eff4ff]'
               }`}
             >
               <CirclePlus size={22} />
@@ -222,8 +242,8 @@ export function Header({
               title={currentTheme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
               className={`p-1.5 rounded-lg transition-all ${
                 currentTheme === 'dark'
-                  ? 'text-[#c7c4d7] hover:text-[#c0c1ff] hover:bg-[#201f1f]'
-                  : 'text-[#767586] hover:text-[#4648d4] hover:bg-[#eff4ff]'
+                  ? 'text-[#c7c4d7] hover:bg-[#201f1f]'
+                  : 'text-[#767586] hover:bg-[#eff4ff]'
               }`}
             >
               {currentTheme === 'dark' ? <Moon size={22} /> : <Sun size={22} />}
@@ -233,8 +253,8 @@ export function Header({
               title="Alerts"
               className={`p-1.5 rounded-lg transition-all relative ${
                 currentTheme === 'dark'
-                  ? 'text-[#c7c4d7] hover:text-[#c0c1ff] hover:bg-[#201f1f]'
-                  : 'text-[#767586] hover:text-[#4648d4] hover:bg-[#eff4ff]'
+                  ? 'text-[#c7c4d7] hover:bg-[#201f1f]'
+                  : 'text-[#767586] hover:bg-[#eff4ff]'
               }`}
             >
               <Bell size={22} />

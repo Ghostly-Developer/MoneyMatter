@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, Lock, FileUp, Wallet, Settings, LifeBuoy, Heart, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { LayoutDashboard, Lock, Wallet, Settings, LifeBuoy, Heart, PanelLeftClose, PanelLeftOpen, User, Banknote, TrendingUp, Receipt, Landmark } from 'lucide-react';
 
 interface SidebarProps {
   currentTab?: string;
@@ -22,9 +22,13 @@ export function Sidebar({
 }: SidebarProps) {
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'vault', label: 'Vault', icon: Lock },
-    { id: 'ingestion', label: 'Ingestion', icon: FileUp },
+    { id: 'account', label: 'Account', icon: User },
+    { id: 'income', label: 'Income', icon: Banknote },
+    { id: 'investment', label: 'Investment', icon: TrendingUp },
+    { id: 'expense', label: 'Expense', icon: Receipt },
     { id: 'mapper', label: 'Mapper', icon: Wallet },
+    { id: 'vault', label: 'Vault', icon: Lock },
+    { id: 'taxes', label: 'Taxes', icon: Landmark },
   ];
 
   return (
@@ -44,8 +48,8 @@ export function Sidebar({
           >
             <div className={`w-10 h-10 shrink-0 rounded-lg text-white flex items-center justify-center font-black text-lg shadow-lg transition-transform group-hover:scale-105 ${
               theme === 'dark'
-                ? 'bg-gradient-to-br from-[#6366f1] to-[#8b5cf6] shadow-[#6366f1]/30'
-                : 'bg-gradient-to-br from-[#4648d4] to-[#6366f1] shadow-[#4648d4]/20'
+                ? 'bg-gradient-to-br from-[#10b981] to-[#34d399] shadow-[#10b981]/30'
+                : 'bg-gradient-to-br from-[#059669] to-[#10b981] shadow-[#059669]/20'
             }`}>
               M
             </div>
@@ -54,7 +58,7 @@ export function Sidebar({
                 <h1 className={`text-[16px] font-black tracking-tight leading-tight ${
                   theme === 'dark' ? 'text-[#e5e2e1]' : 'text-[#0b1c30]'
                 }`}>
-                  Money<span className={theme === 'dark' ? 'text-[#6366f1]' : 'text-[#4648d4]'}>Matter</span>
+                  Money<span className={theme === 'dark' ? 'text-[#10b981]' : 'text-[#059669]'}>Matter</span>
                 </h1>
                 <p className={`text-[9px] tracking-widest uppercase font-semibold ${
                   theme === 'dark' ? 'text-[#8e8ca0]' : 'text-[#767586]'
@@ -70,8 +74,8 @@ export function Sidebar({
               title="Collapse sidebar"
               className={`p-1.5 rounded-lg shrink-0 transition-colors ${
                 theme === 'dark'
-                  ? 'text-[#8e8ca0] hover:text-[#e5e2e1] hover:bg-[#201f1f]'
-                  : 'text-[#767586] hover:text-[#0b1c30] hover:bg-[#eff4ff]'
+                  ? 'text-[#8e8ca0] hover:bg-[#201f1f]'
+                  : 'text-[#767586] hover:bg-[#eff4ff]'
               }`}
             >
               <PanelLeftClose size={18} />
@@ -86,8 +90,8 @@ export function Sidebar({
               title="Expand sidebar"
               className={`p-1.5 rounded-lg transition-colors ${
                 theme === 'dark'
-                  ? 'text-[#8e8ca0] hover:text-[#e5e2e1] hover:bg-[#201f1f]'
-                  : 'text-[#767586] hover:text-[#0b1c30] hover:bg-[#eff4ff]'
+                  ? 'text-[#8e8ca0] hover:bg-[#201f1f]'
+                  : 'text-[#767586] hover:bg-[#eff4ff]'
               }`}
             >
               <PanelLeftOpen size={18} />
@@ -109,18 +113,20 @@ export function Sidebar({
                 } ${
                   isActive
                     ? theme === 'dark'
-                      ? 'bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] text-white font-semibold shadow-lg shadow-[#6366f1]/20'
-                      : 'bg-gradient-to-r from-[#4648d4] to-[#6366f1] text-white font-semibold shadow-lg shadow-[#4648d4]/20'
+                      ? 'bg-[#052e1c] text-[#6ee7b7] font-semibold'
+                      : 'bg-[#d1fae5] text-[#065f46] font-semibold'
                     : theme === 'dark'
-                    ? 'text-[#c7c4d7] hover:bg-[#201f1f] hover:text-[#e5e2e1]'
-                    : 'text-[#464554] hover:bg-[#eff4ff] hover:text-[#4648d4]'
+                    ? 'text-[#c7c4d7] hover:bg-[#201f1f]'
+                    : 'text-[#464554] hover:bg-[#eff4ff]'
                 }`}
               >
                 <item.icon
                   size={20}
                   className={`shrink-0 ${
                     isActive
-                      ? 'text-white'
+                      ? theme === 'dark'
+                        ? 'text-[#6ee7b7]'
+                        : 'text-[#065f46]'
                       : theme === 'dark'
                       ? 'text-[#c7c4d7]'
                       : 'text-[#464554]'
@@ -142,8 +148,8 @@ export function Sidebar({
             collapsed ? 'justify-center px-0' : 'px-4'
           } ${
             theme === 'dark'
-              ? 'text-[#c7c4d7] hover:bg-[#201f1f] hover:text-[#e5e2e1]'
-              : 'text-[#464554] hover:bg-[#eff4ff] hover:text-[#4648d4]'
+              ? 'text-[#c7c4d7] hover:bg-[#201f1f]'
+              : 'text-[#464554] hover:bg-[#eff4ff]'
           }`}
         >
           <Settings
@@ -159,8 +165,8 @@ export function Sidebar({
             collapsed ? 'justify-center px-0' : 'px-4'
           } ${
             theme === 'dark'
-              ? 'text-[#c7c4d7] hover:bg-[#201f1f] hover:text-[#e5e2e1]'
-              : 'text-[#464554] hover:bg-[#eff4ff] hover:text-[#4648d4]'
+              ? 'text-[#c7c4d7] hover:bg-[#201f1f]'
+              : 'text-[#464554] hover:bg-[#eff4ff]'
           }`}
         >
           <LifeBuoy
