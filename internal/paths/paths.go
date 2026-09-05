@@ -14,14 +14,18 @@ import (
 const DataDirName = "MoneyMatter_Database"
 
 // DataDir resolves (and creates, if missing) the root Database directory
-// under the OS-appropriate per-user config location (e.g. %AppData% on
-// Windows, ~/.config on Linux, ~/Library/Application Support on macOS).
+// next to the running executable, so the app is portable (data travels with
+// the binary instead of being scattered into a per-user OS config location).
 func DataDir() (string, error) {
-	base, err := os.UserConfigDir()
+	exe, err := os.Executable()
 	if err != nil {
 		return "", err
 	}
-	dir := filepath.Join(base, DataDirName)
+	exe, err = filepath.EvalSymlinks(exe)
+	if err != nil {
+		return "", err
+	}
+	dir := filepath.Join(filepath.Dir(exe), DataDirName)
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return "", err
 	}
