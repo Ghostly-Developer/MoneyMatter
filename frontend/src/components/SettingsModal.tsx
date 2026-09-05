@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { X, IndianRupee, Euro, DollarSign, Monitor, Sun, Moon, FolderOpen, Download, Check } from 'lucide-react';
+import React from 'react';
+import { X, IndianRupee, Euro, DollarSign, Monitor, Sun, Moon, Download, Check } from 'lucide-react';
 import { getAccentTokens, ACCENT_OPTIONS, type AccentColor } from '../constants/accentColors';
 
 export type BaseCurrency = 'INR' | 'EUR' | 'USD';
@@ -15,8 +15,6 @@ interface SettingsModalProps {
   themeMode?: ThemeMode;
   onThemeModeChange?: (mode: ThemeMode) => void;
   onAccentChange?: (accent: AccentColor) => void;
-  dataDirectory?: string | null;
-  onSelectDataDirectory?: (folderName: string) => void;
   onExportData?: () => void;
 }
 
@@ -42,8 +40,6 @@ export function SettingsModal({
   themeMode = 'system',
   onThemeModeChange = () => {},
   onAccentChange = () => {},
-  dataDirectory = null,
-  onSelectDataDirectory = () => {},
   onExportData = () => {},
 }: SettingsModalProps) {
   if (!open) return null;
@@ -60,34 +56,6 @@ export function SettingsModal({
   const labelClass = `block text-[10px] uppercase font-bold tracking-wider mb-2 ${isDark ? 'text-[#8e8ca0]' : 'text-[#767586]'}`;
   const pillActive = 'bg-[var(--accent-pastel-bg)] text-[var(--accent-pastel-text)] font-semibold';
   const pillInactive = isDark ? 'text-[#c7c4d7] hover:bg-[#2a2a2a]' : 'text-[#464554] hover:bg-white';
-
-  const canPickDirectory = typeof window !== 'undefined' && 'showDirectoryPicker' in window;
-  const folderInputRef = useRef<HTMLInputElement | null>(null);
-  // webkitdirectory/directory aren't in React's InputHTMLAttributes typings.
-  const folderInputProps = { webkitdirectory: 'true', directory: 'true' } as unknown as React.InputHTMLAttributes<HTMLInputElement>;
-
-  const handlePickDirectory = async () => {
-    if (!canPickDirectory) {
-      folderInputRef.current?.click();
-      return;
-    }
-    try {
-      const picker = (window as unknown as { showDirectoryPicker: () => Promise<{ name: string }> }).showDirectoryPicker;
-      const handle = await picker();
-      onSelectDataDirectory(handle.name);
-    } catch {
-      // User cancelled the picker — nothing to do.
-    }
-  };
-
-  const handleFolderInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const relativePath = (file as File & { webkitRelativePath?: string }).webkitRelativePath;
-      onSelectDataDirectory(relativePath ? relativePath.split('/')[0] : file.name);
-    }
-    e.target.value = '';
-  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4" style={accentVars}>
@@ -176,37 +144,6 @@ export function SettingsModal({
                   <span className={`text-[11px] ${isDark ? 'text-[#c7c4d7]' : 'text-[#464554]'}`}>{option.label}</span>
                 </button>
               ))}
-            </div>
-          </div>
-
-          {/* Data Directory */}
-          <div>
-            <label className={labelClass}>Data Directory</label>
-            <div
-              className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 border ${
-                isDark ? 'bg-[#201f1f] border-[#2d2c38]' : 'bg-[#f8f9ff] border-[#c7c4d7]'
-              }`}
-            >
-              <FolderOpen size={16} className={isDark ? 'text-[#8e8ca0]' : 'text-[#767586]'} />
-              <span className={`flex-1 text-[13px] truncate ${dataDirectory ? (isDark ? 'text-[#e5e2e1]' : 'text-[#0b1c30]') : isDark ? 'text-[#6b697b]' : 'text-[#9a98a8]'}`}>
-                {dataDirectory ?? 'No folder selected'}
-              </span>
-              <button
-                onClick={handlePickDirectory}
-                className={`shrink-0 px-3 py-1.5 rounded-lg text-[12px] font-semibold tracking-wide transition-colors ${
-                  isDark ? 'bg-[#2a2a2a] text-[#e5e2e1] hover:bg-[#353534]' : 'bg-white border border-[#c7c4d7] text-[#0b1c30] hover:bg-[#eff4ff]'
-                }`}
-              >
-                Browse
-              </button>
-              <input
-                ref={folderInputRef}
-                type="file"
-                multiple
-                className="hidden"
-                onChange={handleFolderInputChange}
-                {...folderInputProps}
-              />
             </div>
           </div>
 

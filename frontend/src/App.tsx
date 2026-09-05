@@ -27,7 +27,6 @@ function App() {
   const theme = themeMode === 'system' ? systemTheme : themeMode
   const [accent, setAccent] = useState<AccentColor>('green')
   const [baseCurrency, setBaseCurrency] = useState<BaseCurrency>('INR')
-  const [dataDirectory, setDataDirectory] = useState<string | null>(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [supportOpen, setSupportOpen] = useState(false)
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -130,8 +129,6 @@ function App() {
         onBaseCurrencyChange={setBaseCurrency}
         themeMode={themeMode}
         onThemeModeChange={setThemeMode}
-        dataDirectory={dataDirectory}
-        onSelectDataDirectory={setDataDirectory}
         onExportData={handleExportData}
       />
       <SupportModal
