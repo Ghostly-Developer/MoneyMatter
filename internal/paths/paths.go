@@ -5,6 +5,8 @@ package paths
 import (
 	"os"
 	"path/filepath"
+	"regexp"
+	"strings"
 )
 
 // DataDirName is the top-level folder that holds all of MoneyMatter's local
@@ -24,4 +26,23 @@ func DataDir() (string, error) {
 		return "", err
 	}
 	return dir, nil
+}
+
+// invalidDirChars matches characters that are unsafe/illegal in a directory
+// name on at least one of Windows/macOS/Linux.
+var invalidDirChars = regexp.MustCompile(`[<>:"/\\|?*\x00-\x1F]`)
+
+// SanitizeDirName turns an arbitrary user-provided name (a profile name, an
+// income stream name, ...) into a safe, non-empty directory name, falling
+// back to fallback if nothing usable remains. Shared by every package that
+// names a directory after a user-provided string, so a profile directory and
+// an income-stream directory sanitize identically.
+func SanitizeDirName(name, fallback string) string {
+	name = strings.TrimSpace(name)
+	name = invalidDirChars.ReplaceAllString(name, "_")
+	name = strings.TrimRight(name, " .") // trailing dot/space is invalid on Windows
+	if name == "" {
+		name = fallback
+	}
+	return name
 }

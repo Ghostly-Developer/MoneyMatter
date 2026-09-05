@@ -8,7 +8,7 @@ import { SupportModal } from './components/SupportModal'
 import { IncomePage } from './pages/income/IncomePage'
 import type { AccentColor } from './constants/accentColors'
 import { useEffect, useMemo, useState } from 'react'
-import { CreateProfile, ExportProfileData, ListProfiles, RenameProfile, UpdateProfile } from '../wailsjs/go/main/App'
+import { CreateProfile, DeleteProfile, ExportProfileData, ListProfiles, RenameProfile, UpdateProfile } from '../wailsjs/go/main/App'
 import { profile } from '../wailsjs/go/models'
 import { isMockMode } from './utils/mock'
 import { MOCK_PROFILES } from './mocks/profiles'
@@ -41,8 +41,20 @@ function toDisplayProfile(p: profile.Profile): Profile {
   }
 }
 
+const TAB_STORAGE_KEY = 'moneymatter.currentTab'
+
 function App() {
-  const [currentTab, setCurrentTab] = useState('dashboard')
+  const [currentTab, setCurrentTabState] = useState(
+    () => (typeof window !== 'undefined' && window.localStorage.getItem(TAB_STORAGE_KEY)) || 'dashboard'
+  )
+  const setCurrentTab = (tab: string) => {
+    setCurrentTabState(tab)
+    try {
+      window.localStorage.setItem(TAB_STORAGE_KEY, tab)
+    } catch {
+      // localStorage unavailable (e.g. private mode) - tab just won't survive a refresh
+    }
+  }
   const [rawProfiles, setRawProfiles] = useState<profile.Profile[]>([])
   const [currentProfileId, setCurrentProfileId] = useState('')
   const [themeMode, setThemeMode] = useState<ThemeMode>('system')
@@ -158,6 +170,20 @@ function App() {
     setRawProfiles((prev) => prev.map((r) => (r.id === updated.id ? updated : r)))
   }
 
+  const handleDeleteProfile = async (p: Profile) => {
+    if (isMockMode()) {
+      if (p.name === 'Guest') throw new Error('Cannot delete the guest profile')
+      if (rawProfiles.length <= 1) throw new Error('Cannot delete the only profile')
+    } else {
+      await DeleteProfile(p.id)
+    }
+    const next = rawProfiles.filter((r) => r.id !== p.id)
+    setRawProfiles(next)
+    if (currentProfileId === p.id) {
+      setCurrentProfileId((next.find((r) => r.isAdmin) ?? next[0])?.id ?? '')
+    }
+  }
+
   const handleExportData = () => {
     if (!currentProfileRaw.id) return
     if (isMockMode()) {
@@ -195,6 +221,7 @@ function App() {
         onSelectProfile={(p) => setCurrentProfileId(p.id)}
         onEditProfile={handleEditProfile}
         onAddProfile={handleAddProfile}
+        onDeleteProfile={handleDeleteProfile}
         onOpenSearch={() => console.log('Open search')}
         onOpenAddTransaction={() => console.log('Open add transaction')}
         onOpenAlerts={() => console.log('Open alerts')}
@@ -208,7 +235,7 @@ function App() {
         sidebarCollapsed ? 'md:ml-20' : 'md:ml-64'
       } ${theme === 'dark' ? 'bg-[#0f0f14]' : 'bg-[#f5f5fa]'}`}>
         {currentTab === 'income' ? (
-          <IncomePage theme={theme} accent={accent} />
+          <IncomePage theme={theme} accent={accent} currency={baseCurrency} profileId={currentProfileRaw.id} />
         ) : (
           <>
             <h1 className={`text-2xl font-bold mb-4 ${theme === 'dark' ? 'text-white' : 'text-[#0b1c30]'}`}>

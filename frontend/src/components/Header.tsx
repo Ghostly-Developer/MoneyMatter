@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { Search, ChevronDown, CirclePlus, Bell, Moon, Sun, Pencil, UserPlus, CheckCheck } from 'lucide-react';
 import { getAccentTokens, type AccentColor } from '../constants/accentColors';
 import { ProfileModal, type Profile } from './ProfileModal';
@@ -24,6 +25,7 @@ interface HeaderProps {
   onSelectProfile?: (profile: Profile) => void;
   onEditProfile?: (profile: Profile) => void | Promise<void>;
   onAddProfile?: (profile: Profile) => void | Promise<void>;
+  onDeleteProfile?: (profile: Profile) => void | Promise<void>;
   onOpenSearch?: () => void;
   onOpenAddTransaction?: () => void;
   onOpenAlerts?: () => void;
@@ -50,6 +52,7 @@ export function Header({
   onSelectProfile = () => {},
   onEditProfile = () => {},
   onAddProfile = () => {},
+  onDeleteProfile = () => {},
   onOpenSearch = () => {},
   onOpenAddTransaction = () => {},
   onOpenAlerts = () => {},
@@ -63,6 +66,9 @@ export function Header({
   const [profileModal, setProfileModal] = useState<{ mode: 'add' | 'edit'; profile: Profile | null } | null>(null);
   const [profileSaving, setProfileSaving] = useState(false);
   const [profileError, setProfileError] = useState<string | null>(null);
+  const [deleteProfileTarget, setDeleteProfileTarget] = useState<Profile | null>(null);
+  const [deletingProfile, setDeletingProfile] = useState(false);
+  const [deleteProfileError, setDeleteProfileError] = useState<string | null>(null);
   const [alertsOpen, setAlertsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>(INITIAL_NOTIFICATIONS);
   const hasUnread = hasAlerts || notifications.length > 0;
@@ -323,7 +329,68 @@ export function Header({
                 setProfileSaving(false);
               }
             }}
+            onDelete={(p) => {
+              setProfileModal(null);
+              setDeleteProfileError(null);
+              setDeleteProfileTarget(p);
+            }}
           />
+
+          {/* Delete Profile Confirmation - portalled to <body> so its `fixed`
+              overlay covers the full viewport instead of just the header's
+              box (the header's backdrop-blur-md makes it a containing block
+              for fixed descendants, same gotcha as ProfileModal). */}
+          {deleteProfileTarget &&
+            createPortal(
+              <div className="fixed inset-0 z-[60] flex items-center justify-center px-4">
+                <div className="fixed inset-0 bg-black/50" onClick={() => !deletingProfile && setDeleteProfileTarget(null)} />
+                <div
+                  className={`relative w-full max-w-sm rounded-2xl shadow-2xl p-6 ${
+                    currentTheme === 'dark' ? 'bg-[#1a1a1a] border border-[#353534]' : 'bg-white border border-[#E2E8F0]'
+                  }`}
+                >
+                  <h2 className={`text-[15px] font-semibold tracking-tight mb-4 ${currentTheme === 'dark' ? 'text-[#e5e2e1]' : 'text-[#0b1c30]'}`}>
+                    Delete Profile
+                  </h2>
+                  <p className={`text-[13px] ${currentTheme === 'dark' ? 'text-[#8e8ca0]' : 'text-[#767586]'}`}>
+                    Are you sure you want to delete {deleteProfileTarget.name}? All of its data will be permanently removed. This can&apos;t be undone.
+                  </p>
+                  {deleteProfileError && (
+                    <p className={`mt-3 text-[12px] ${currentTheme === 'dark' ? 'text-[#f87171]' : 'text-[#dc2626]'}`}>{deleteProfileError}</p>
+                  )}
+                  <div className="flex justify-end gap-2 mt-6">
+                    <button
+                      onClick={() => setDeleteProfileTarget(null)}
+                      disabled={deletingProfile}
+                      className={`px-4 py-2.5 rounded-xl text-[13px] font-medium tracking-wide transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
+                        currentTheme === 'dark' ? 'text-[#c7c4d7] hover:bg-[#201f1f]' : 'text-[#464554] hover:bg-[#eff4ff]'
+                      }`}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={async () => {
+                        setDeletingProfile(true);
+                        setDeleteProfileError(null);
+                        try {
+                          await onDeleteProfile(deleteProfileTarget);
+                          setDeleteProfileTarget(null);
+                        } catch (err) {
+                          setDeleteProfileError(err instanceof Error ? err.message : String(err));
+                        } finally {
+                          setDeletingProfile(false);
+                        }
+                      }}
+                      disabled={deletingProfile}
+                      className="px-4 py-2.5 rounded-xl text-[13px] font-semibold tracking-wide text-white shadow-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed bg-red-500 hover:bg-red-600"
+                    >
+                      {deletingProfile ? 'Deleting…' : 'Delete'}
+                    </button>
+                  </div>
+                </div>
+              </div>,
+              document.body
+            )}
 
           {/* Quick Header Action Icons */}
           <div className="flex items-center gap-2 md:gap-3">

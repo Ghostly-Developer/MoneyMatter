@@ -19,8 +19,8 @@ const GuestProfileID = "guest"
 
 // Profile mirrors the `profiles` table in the master profile database.
 // Id is the primary key here and is the foreign key every per-profile
-// database (income/expense/investment/taxes, under <profile>/db) uses to
-// scope its own rows back to this profile.
+// database (income, under <profile>/income; expense/investment/taxes, under
+// <profile>/db, once built) uses to scope its own rows back to this profile.
 //
 // Name is unique and doubles as the profile's on-disk directory name
 // (<dataDir>/profiles/<name>) - use RenameProfile to change it, since a
@@ -303,6 +303,61 @@ func (s *Store) RenameProfile(id, newName string) (Profile, error) {
 	return current, nil
 }
 
+// ErrCannotDeleteGuestProfile is returned when deleting the seeded guest
+// profile is attempted - the app always needs it as a guaranteed fallback.
+var ErrCannotDeleteGuestProfile = errors.New("cannot delete the guest profile")
+
+// ErrCannotDeleteLastProfile is returned when deleting the only remaining
+// profile is attempted - the app always needs at least one usable profile.
+var ErrCannotDeleteLastProfile = errors.New("cannot delete the only profile")
+
+// Delete removes a profile and its on-disk directory
+// (<dataDir>/profiles/<name>). Deleting the seeded guest profile or the last
+// remaining profile is refused. If the deleted profile was admin, the guest
+// profile is promoted to admin so exactly one profile stays admin.
+func (s *Store) Delete(id string) error {
+	if id == GuestProfileID {
+		return ErrCannotDeleteGuestProfile
+	}
+
+	p, err := s.Get(id)
+	if err != nil {
+		return err
+	}
+
+	var count int
+	if err := s.db.QueryRow(`SELECT COUNT(*) FROM profiles`).Scan(&count); err != nil {
+		return fmt.Errorf("count profiles: %w", err)
+	}
+	if count <= 1 {
+		return ErrCannotDeleteLastProfile
+	}
+
+	res, err := s.db.Exec(`DELETE FROM profiles WHERE id = ?`, id)
+	if err != nil {
+		return fmt.Errorf("delete profile: %w", err)
+	}
+	n, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if n == 0 {
+		return ErrProfileNotFound
+	}
+
+	if p.IsAdmin {
+		if _, err := s.db.Exec(`UPDATE profiles SET is_admin = 1 WHERE id = ?`, GuestProfileID); err != nil {
+			return fmt.Errorf("promote guest profile to admin: %w", err)
+		}
+	}
+
+	dir := profileDir(s.dataDir, p.Name)
+	if err := os.RemoveAll(dir); err != nil {
+		return fmt.Errorf("remove profile directory: %w", err)
+	}
+	return nil
+}
+
 // Get fetches a single profile by id.
 func (s *Store) Get(id string) (Profile, error) {
 	row := s.db.QueryRow(
@@ -310,6 +365,28 @@ func (s *Store) Get(id string) (Profile, error) {
 		id,
 	)
 	return scanProfile(row)
+}
+
+// DBDir returns the <dataDir>/profiles/<name>/db directory for the given
+// profile id - where this profile's own per-area SQLite databases (income,
+// expense, investment, taxes) live.
+func (s *Store) DBDir(id string) (string, error) {
+	p, err := s.Get(id)
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(profileDir(s.dataDir, p.Name), "db"), nil
+}
+
+// IncomeDocsDir returns the <dataDir>/profiles/<name>/income directory for
+// the given profile id - where uploaded payslip/proof-of-income documents
+// are stored, one subdirectory per income stream.
+func (s *Store) IncomeDocsDir(id string) (string, error) {
+	p, err := s.Get(id)
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(profileDir(s.dataDir, p.Name), "income"), nil
 }
 
 // List returns every known profile.

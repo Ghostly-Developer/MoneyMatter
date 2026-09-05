@@ -125,6 +125,59 @@ MoneyMatter/
     name untouched) and `internal/profile/export_test.go` (zip contents,
     unknown-id error).
 
+- **Per-profile data**, `internal/income` (package `income`): the first
+  database that lives inside a profile's own folder rather than the master
+  `profiles.db` — `<dataDir>/profiles/<name>/db/income.db`. `App` opens and
+  closes this database per call (`openIncomeStore` in `app.go`) rather than
+  holding a long-lived handle like it does for the master `profile.Store`,
+  since a handle held open across a `RenameProfile` call could collide with
+  that call's `os.Rename` of the same directory on Windows.
+  - `income_streams` table: `id` (TEXT PK), `profile_id` (FK back to
+    `profiles.id`), `name` (UNIQUE NOT NULL — also what the stream's
+    document folder is named after, see below), `source_type` (`both` |
+    `account` | `cash`), `tax_status` (`both` | `taxed` | `non_taxed`),
+    `bank_account` (required when `source_type` is `account` or `both`,
+    enforced in Go), `last_updated`. `income.Store.UpdateStream` excludes
+    `name` from its `SET` clause, mirroring `profile.Store.Update` excluding
+    `name` — a stream can't be silently renamed out of sync with its
+    on-disk folder.
+  - `income_entries` table (renamed from `payslips` — the Go `Payslip`
+    struct is now `Entry`, since a row here can be a payslip or any other
+    proof-of-income document): `id` (TEXT PK), `name` (UNIQUE NOT NULL),
+    `income_stream_id` (FK → `income_streams.id`), `month_year` (`MM/YY`,
+    required) + `day` (`DD`, optional), validated by regex in Go, not
+    enforced by SQLite, `source_type`/`tax_status` restricted to
+    `account`/`cash` and `taxed`/`non_taxed` (no `both` on a single entry),
+    `bank_account` (required when `source_type` is `account`), `amount`
+    (required, must be > 0) / `tax_amount` / `deductions`, `directories`
+    (JSON-encoded string array of uploaded document paths), `last_updated`.
+    A profile's `income.db` created before this rename still has a
+    `payslips` table on disk — `Store.migrate` renames it to
+    `income_entries` on open (`renameLegacyPayslipsTable`), same
+    detect-and-migrate pattern as the earlier legacy `date` column drop.
+  - `income.EnsureStreamDir(profileIncomeDir, streamName)` (in
+    `internal/income/dirs.go`) creates
+    `<dataDir>/profiles/<name>/income/<sanitized stream name>/` — called
+    from `App.CreateIncomeStream` right after the DB insert — as the
+    directory a stream's uploaded income-entry files live under (the paths
+    an `Entry.Directories` entry would point at).
+  - `paths.SanitizeDirName(name, fallback)` (moved out of
+    `internal/profile/dirs.go`, which now just wraps it) is shared by both
+    `profile` and `income` so a profile directory and an income-stream
+    directory sanitize identically.
+  - `profile.Store` gained `DBDir(id)` and `IncomeDocsDir(id)` so `income`
+    (and future per-profile-database packages) can locate a profile's `db/`
+    and `income/` folders without reaching into `profile`'s private
+    `profileDir` helper.
+  - Bound on `App`: `ListIncomeStreams`/`CreateIncomeStream`/
+    `UpdateIncomeStream` (keyed by `profileId`), and
+    `ListIncomeEntries`/`CreateIncomeEntry`/`UpdateIncomeEntry`/
+    `DeleteIncomeEntry` (take an explicit `profileID` argument, since
+    `income_entries` itself carries no profile id column — it's only used
+    to pick which profile's `income.db` to open). Fully wired into
+    `IncomePage.tsx`/`IncomeOverview.tsx`.
+  - Covered by `internal/income/store_test.go`.
+
 ## Planned Direction (from docs/INSTRUCTIONS.md)
 
 Import/export of financial records (JSON/XML), document management (payslips,

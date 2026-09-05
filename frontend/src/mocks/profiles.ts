@@ -17,7 +17,7 @@ export const MOCK_PROFILES: profile.Profile[] = [
     id: 'mock-alex',
     name: 'Alex',
     color: '#6366f1',
-    currency: 'USD',
+    currency: 'INR',
     baseTheme: 'dark',
     themeColor: 'violet',
     isAdmin: false,

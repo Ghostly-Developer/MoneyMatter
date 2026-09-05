@@ -1,8 +1,9 @@
 import React from 'react';
 import { X, IndianRupee, Euro, DollarSign, Monitor, Sun, Moon, Download, Check } from 'lucide-react';
 import { getAccentTokens, ACCENT_OPTIONS, type AccentColor } from '../constants/accentColors';
+import type { BaseCurrency } from '../constants/currency';
 
-export type BaseCurrency = 'INR' | 'EUR' | 'USD';
+export type { BaseCurrency };
 export type ThemeMode = 'system' | 'light' | 'dark';
 
 interface SettingsModalProps {

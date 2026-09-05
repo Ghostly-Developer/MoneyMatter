@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Check } from 'lucide-react';
+import { X, Check, Trash2 } from 'lucide-react';
 import { getAccentTokens, type AccentColor } from '../constants/accentColors';
 import { AVATAR_COLOR_OPTIONS } from '../constants/avatarColors';
 
@@ -19,8 +19,10 @@ interface ProfileModalProps {
   accent?: AccentColor;
   saving?: boolean;
   error?: string | null;
+  deleting?: boolean;
   onClose: () => void;
   onSave: (profile: Profile) => void;
+  onDelete?: (profile: Profile) => void;
 }
 
 export function ProfileModal({
@@ -31,8 +33,10 @@ export function ProfileModal({
   accent = 'green',
   saving = false,
   error = null,
+  deleting = false,
   onClose,
   onSave,
+  onDelete,
 }: ProfileModalProps) {
   const isDark = theme === 'dark';
   const t = getAccentTokens(theme, accent);
@@ -142,23 +146,37 @@ export function ProfileModal({
           )}
         </div>
 
-        <div className="flex justify-end gap-2 mt-7">
-          <button
-            onClick={onClose}
-            disabled={saving}
-            className={`px-4 py-2.5 rounded-xl text-[13px] font-medium tracking-wide transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
-              isDark ? 'text-[#c7c4d7] hover:bg-[#201f1f]' : 'text-[#464554] hover:bg-[#eff4ff]'
-            }`}
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleSave}
-            disabled={!name.trim() || saving}
-            className="px-4 py-2.5 rounded-xl text-[13px] font-semibold tracking-wide text-white shadow-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed bg-[var(--accent-solid)] hover:bg-[var(--accent-solid-hover)]"
-          >
-            {saving ? 'Saving…' : mode === 'add' ? 'Add' : 'Save'}
-          </button>
+        <div className="flex justify-between items-center gap-2 mt-7">
+          {mode === 'edit' && onDelete && profile ? (
+            <button
+              onClick={() => onDelete(profile)}
+              disabled={saving || deleting}
+              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-[13px] font-semibold tracking-wide text-red-500 hover:bg-red-500/10 hover:text-red-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <Trash2 size={14} />
+              {deleting ? 'Deleting…' : 'Delete'}
+            </button>
+          ) : (
+            <span />
+          )}
+          <div className="flex gap-2">
+            <button
+              onClick={onClose}
+              disabled={saving || deleting}
+              className={`px-4 py-2.5 rounded-xl text-[13px] font-medium tracking-wide transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
+                isDark ? 'text-[#c7c4d7] hover:bg-[#201f1f]' : 'text-[#464554] hover:bg-[#eff4ff]'
+              }`}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSave}
+              disabled={!name.trim() || saving || deleting}
+              className="px-4 py-2.5 rounded-xl text-[13px] font-semibold tracking-wide text-white shadow-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed bg-[var(--accent-solid)] hover:bg-[var(--accent-solid-hover)]"
+            >
+              {saving ? 'Saving…' : mode === 'add' ? 'Add' : 'Save'}
+            </button>
+          </div>
         </div>
       </div>
     </div>,

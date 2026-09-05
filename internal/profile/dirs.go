@@ -3,26 +3,16 @@ package profile
 import (
 	"os"
 	"path/filepath"
-	"regexp"
-	"strings"
-)
 
-// invalidDirChars matches characters that are unsafe/illegal in a directory
-// name on at least one of Windows/macOS/Linux.
-var invalidDirChars = regexp.MustCompile(`[<>:"/\\|?*\x00-\x1F]`)
+	"MoneyMatter/internal/paths"
+)
 
 // sanitizeDirName turns a profile name into a safe, non-empty directory
 // name. Profile names are unique (enforced at the DB layer), so the
 // sanitized name is what actually identifies the profile's directory on
 // disk.
 func sanitizeDirName(name string) string {
-	name = strings.TrimSpace(name)
-	name = invalidDirChars.ReplaceAllString(name, "_")
-	name = strings.TrimRight(name, " .") // trailing dot/space is invalid on Windows
-	if name == "" {
-		name = "profile"
-	}
-	return name
+	return paths.SanitizeDirName(name, "profile")
 }
 
 // profileDir returns the directory for a profile with the given name,

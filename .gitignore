@@ -1,3 +1,14 @@
 build/bin
 node_modules
 frontend/dist
+
+# Local app data (SQLite databases + uploaded documents) - lives under the
+# OS user config dir (MoneyMatter_Database) normally, but never commit one
+# if it ends up inside the repo (e.g. a local/dev data dir override).
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+MoneyMatter_Database/
