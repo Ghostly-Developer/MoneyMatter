@@ -17,6 +17,8 @@ interface ProfileModalProps {
   profile?: Profile | null;
   theme?: 'dark' | 'light';
   accent?: AccentColor;
+  saving?: boolean;
+  error?: string | null;
   onClose: () => void;
   onSave: (profile: Profile) => void;
 }
@@ -27,6 +29,8 @@ export function ProfileModal({
   profile = null,
   theme = 'dark',
   accent = 'green',
+  saving = false,
+  error = null,
   onClose,
   onSave,
 }: ProfileModalProps) {
@@ -132,12 +136,17 @@ export function ProfileModal({
               ))}
             </div>
           </div>
+
+          {error && (
+            <p className={`text-[12px] ${isDark ? 'text-[#f87171]' : 'text-[#dc2626]'}`}>{error}</p>
+          )}
         </div>
 
         <div className="flex justify-end gap-2 mt-7">
           <button
             onClick={onClose}
-            className={`px-4 py-2.5 rounded-xl text-[13px] font-medium tracking-wide transition-colors ${
+            disabled={saving}
+            className={`px-4 py-2.5 rounded-xl text-[13px] font-medium tracking-wide transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
               isDark ? 'text-[#c7c4d7] hover:bg-[#201f1f]' : 'text-[#464554] hover:bg-[#eff4ff]'
             }`}
           >
@@ -145,10 +154,10 @@ export function ProfileModal({
           </button>
           <button
             onClick={handleSave}
-            disabled={!name.trim()}
+            disabled={!name.trim() || saving}
             className="px-4 py-2.5 rounded-xl text-[13px] font-semibold tracking-wide text-white shadow-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed bg-[var(--accent-solid)] hover:bg-[var(--accent-solid-hover)]"
           >
-            {mode === 'add' ? 'Add' : 'Save'}
+            {saving ? 'Saving…' : mode === 'add' ? 'Add' : 'Save'}
           </button>
         </div>
       </div>

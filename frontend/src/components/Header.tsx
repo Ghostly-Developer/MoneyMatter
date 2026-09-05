@@ -22,8 +22,8 @@ interface HeaderProps {
   currentProfile?: Profile;
   profiles?: Profile[];
   onSelectProfile?: (profile: Profile) => void;
-  onEditProfile?: (profile: Profile) => void;
-  onAddProfile?: (profile: Profile) => void;
+  onEditProfile?: (profile: Profile) => void | Promise<void>;
+  onAddProfile?: (profile: Profile) => void | Promise<void>;
   onOpenSearch?: () => void;
   onOpenAddTransaction?: () => void;
   onOpenAlerts?: () => void;
@@ -61,6 +61,8 @@ export function Header({
 }: HeaderProps) {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [profileModal, setProfileModal] = useState<{ mode: 'add' | 'edit'; profile: Profile | null } | null>(null);
+  const [profileSaving, setProfileSaving] = useState(false);
+  const [profileError, setProfileError] = useState<string | null>(null);
   const [alertsOpen, setAlertsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>(INITIAL_NOTIFICATIONS);
   const hasUnread = hasAlerts || notifications.length > 0;
@@ -259,6 +261,7 @@ export function Header({
                             onClick={(e) => {
                               e.stopPropagation();
                               setProfileDropdownOpen(false);
+                              setProfileError(null);
                               setProfileModal({ mode: 'edit', profile: p });
                             }}
                             title={`Edit ${p.name}`}
@@ -278,6 +281,7 @@ export function Header({
                     <button
                       onClick={() => {
                         setProfileDropdownOpen(false);
+                        setProfileError(null);
                         setProfileModal({ mode: 'add', profile: null });
                       }}
                       className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-left text-[13px] font-medium transition-colors ${
@@ -300,14 +304,24 @@ export function Header({
             profile={profileModal?.profile ?? null}
             theme={currentTheme}
             accent={accent}
+            saving={profileSaving}
+            error={profileError}
             onClose={() => setProfileModal(null)}
-            onSave={(p) => {
-              if (profileModal?.mode === 'edit') {
-                onEditProfile(p);
-              } else {
-                onAddProfile(p);
+            onSave={async (p) => {
+              setProfileSaving(true);
+              setProfileError(null);
+              try {
+                if (profileModal?.mode === 'edit') {
+                  await onEditProfile(p);
+                } else {
+                  await onAddProfile(p);
+                }
+                setProfileModal(null);
+              } catch (err) {
+                setProfileError(err instanceof Error ? err.message : String(err));
+              } finally {
+                setProfileSaving(false);
               }
-              setProfileModal(null);
             }}
           />
 

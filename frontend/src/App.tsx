@@ -1,4 +1,5 @@
 import { Header, getSystemTheme } from './components/Header'
+import type { Profile } from './components/ProfileModal'
 import { Sidebar } from './components/Sidebar'
 import { ChatButton } from './components/ChatButton'
 import { ChatPopup } from './components/ChatPopup'
@@ -6,22 +7,44 @@ import { SettingsModal, type BaseCurrency, type ThemeMode } from './components/S
 import { SupportModal } from './components/SupportModal'
 import { IncomePage } from './pages/income/IncomePage'
 import type { AccentColor } from './constants/accentColors'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { CreateProfile, ExportProfileData, ListProfiles, RenameProfile, UpdateProfile } from '../wailsjs/go/main/App'
+import { profile } from '../wailsjs/go/models'
+import { isMockMode } from './utils/mock'
+import { MOCK_PROFILES } from './mocks/profiles'
 
-interface Profile {
-  id: string;
-  name: string;
-  avatar: string;
-  color?: string;
+const THEME_MODES: ThemeMode[] = ['system', 'light', 'dark']
+const ACCENT_COLORS: AccentColor[] = ['green', 'violet', 'orange']
+const BASE_CURRENCIES: BaseCurrency[] = ['INR', 'EUR', 'USD']
+
+function isThemeMode(v: string): v is ThemeMode {
+  return (THEME_MODES as string[]).includes(v)
+}
+function isAccentColor(v: string): v is AccentColor {
+  return (ACCENT_COLORS as string[]).includes(v)
+}
+function isBaseCurrency(v: string): v is BaseCurrency {
+  return (BASE_CURRENCIES as string[]).includes(v)
+}
+
+// Placeholder shown for the brief moment before the real profile list has
+// loaded from the backend (`ListProfiles`) - every fresh install already has
+// a seeded "guest" profile, so this resolves almost immediately.
+const PLACEHOLDER_PROFILE = new profile.Profile({ id: '', name: 'Loading…', color: '' })
+
+function toDisplayProfile(p: profile.Profile): Profile {
+  return {
+    id: p.id,
+    name: p.name,
+    avatar: (p.name.trim().charAt(0) || '?').toUpperCase(),
+    color: p.color || undefined,
+  }
 }
 
 function App() {
   const [currentTab, setCurrentTab] = useState('dashboard')
-  const [currentProfile, setCurrentProfile] = useState<Profile>({
-    id: '1',
-    name: 'Primary Account',
-    avatar: 'P',
-  })
+  const [rawProfiles, setRawProfiles] = useState<profile.Profile[]>([])
+  const [currentProfileId, setCurrentProfileId] = useState('')
   const [themeMode, setThemeMode] = useState<ThemeMode>('system')
   const [systemTheme, setSystemTheme] = useState<'dark' | 'light'>(() => getSystemTheme())
   const theme = themeMode === 'system' ? systemTheme : themeMode
@@ -32,6 +55,45 @@ function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [chatOpen, setChatOpen] = useState(false)
 
+  const currentProfileRaw = useMemo(
+    () => rawProfiles.find((p) => p.id === currentProfileId) ?? rawProfiles[0] ?? PLACEHOLDER_PROFILE,
+    [rawProfiles, currentProfileId]
+  )
+  const currentProfile = useMemo(() => toDisplayProfile(currentProfileRaw), [currentProfileRaw])
+  const profiles = useMemo(() => rawProfiles.map(toDisplayProfile), [rawProfiles])
+
+  // Load every known profile from the local SQLite store on startup and
+  // default to whichever one is marked admin (the seeded "guest" profile
+  // starts out admin, see internal/profile/store.go).
+  useEffect(() => {
+    if (isMockMode()) {
+      setRawProfiles(MOCK_PROFILES)
+      setCurrentProfileId((MOCK_PROFILES.find((p) => p.isAdmin) ?? MOCK_PROFILES[0]).id)
+      return
+    }
+    let cancelled = false
+    ListProfiles()
+      .then((list) => {
+        if (cancelled || list.length === 0) return
+        setRawProfiles(list)
+        setCurrentProfileId((list.find((p) => p.isAdmin) ?? list[0]).id)
+      })
+      .catch((err) => console.error('Failed to load profiles:', err))
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  // Base currency/theme/accent are stored per-profile (`profiles.currency`/
+  // `base_theme`/`theme_color`) - adopt them whenever the active profile
+  // changes (including the initial load above).
+  useEffect(() => {
+    if (!currentProfileRaw.id) return
+    if (isThemeMode(currentProfileRaw.baseTheme)) setThemeMode(currentProfileRaw.baseTheme)
+    if (isAccentColor(currentProfileRaw.themeColor)) setAccent(currentProfileRaw.themeColor)
+    if (isBaseCurrency(currentProfileRaw.currency)) setBaseCurrency(currentProfileRaw.currency)
+  }, [currentProfileRaw.id, currentProfileRaw.baseTheme, currentProfileRaw.themeColor, currentProfileRaw.currency])
+
   useEffect(() => {
     if (typeof window === 'undefined' || !window.matchMedia) return
     const mql = window.matchMedia('(prefers-color-scheme: dark)')
@@ -40,29 +102,79 @@ function App() {
     return () => mql.removeEventListener('change', handleChange)
   }, [])
 
-  const [profiles, setProfiles] = useState<Profile[]>([
-    { id: '1', name: 'Primary Account', avatar: 'P' },
-    { id: '2', name: 'Joint Account', avatar: 'J' },
-    { id: '3', name: 'Business Account', avatar: 'B' },
-  ])
+  // Persists a settings change (theme/accent/currency) onto the active
+  // profile's DB row. Fire-and-forget from the UI's perspective - these
+  // controls already update their own local state immediately.
+  const persistProfilePatch = (patch: Partial<Pick<profile.Profile, 'currency' | 'baseTheme' | 'themeColor'>>) => {
+    if (!currentProfileRaw.id) return
+    const merged = new profile.Profile({ ...currentProfileRaw, ...patch })
+    if (isMockMode()) {
+      setRawProfiles((prev) => prev.map((p) => (p.id === merged.id ? merged : p)))
+      return
+    }
+    UpdateProfile(merged)
+      .then((updated) => setRawProfiles((prev) => prev.map((p) => (p.id === updated.id ? updated : p))))
+      .catch((err) => console.error('Failed to save profile settings:', err))
+  }
 
-  const handleThemeChange = (newTheme: 'dark' | 'light') => {
-    setThemeMode(newTheme)
+  const handleThemeModeChange = (mode: ThemeMode) => {
+    setThemeMode(mode)
+    persistProfilePatch({ baseTheme: mode })
+  }
+  const handleThemeChange = (newTheme: 'dark' | 'light') => handleThemeModeChange(newTheme)
+  const handleAccentChange = (newAccent: AccentColor) => {
+    setAccent(newAccent)
+    persistProfilePatch({ themeColor: newAccent })
+  }
+  const handleBaseCurrencyChange = (currency: BaseCurrency) => {
+    setBaseCurrency(currency)
+    persistProfilePatch({ currency })
+  }
+
+  const handleAddProfile = async (p: Profile) => {
+    const draft = new profile.Profile({
+      name: p.name,
+      color: p.color ?? '',
+      currency: baseCurrency,
+      baseTheme: themeMode,
+      themeColor: accent,
+      isAdmin: false,
+      notifications: [],
+    })
+    const created = isMockMode() ? new profile.Profile({ ...draft, id: `mock-${Date.now()}` }) : await CreateProfile(draft)
+    setRawProfiles((prev) => [...prev, created])
+  }
+
+  const handleEditProfile = async (p: Profile) => {
+    const raw = rawProfiles.find((r) => r.id === p.id)
+    if (!raw) return
+    let updated: profile.Profile
+    if (isMockMode()) {
+      updated = new profile.Profile({ ...raw, name: p.name, color: p.color ?? '' })
+    } else {
+      updated = raw.name !== p.name ? await RenameProfile(raw.id, p.name) : raw
+      updated = await UpdateProfile(new profile.Profile({ ...updated, color: p.color ?? '' }))
+    }
+    setRawProfiles((prev) => prev.map((r) => (r.id === updated.id ? updated : r)))
   }
 
   const handleExportData = () => {
-    const payload = {
-      exportedAt: new Date().toISOString(),
-      profile: currentProfile,
-      settings: { baseCurrency, themeMode, accent },
+    if (!currentProfileRaw.id) return
+    if (isMockMode()) {
+      console.log('Mock mode: skipping export for', currentProfileRaw.name)
+      return
     }
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = 'moneymatter-export.json'
-    link.click()
-    URL.revokeObjectURL(url)
+    ExportProfileData(currentProfileRaw.id)
+      .then(({ filename, data }) => {
+        const blob = new Blob([new Uint8Array(data)], { type: 'application/zip' })
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = filename
+        link.click()
+        URL.revokeObjectURL(url)
+      })
+      .catch((err) => console.error('Failed to export profile data:', err))
   }
 
   return (
@@ -80,12 +192,9 @@ function App() {
       <Header
         currentProfile={currentProfile}
         profiles={profiles}
-        onSelectProfile={setCurrentProfile}
-        onEditProfile={(p) => {
-          setProfiles((prev) => prev.map((existing) => (existing.id === p.id ? p : existing)))
-          setCurrentProfile((prev) => (prev.id === p.id ? p : prev))
-        }}
-        onAddProfile={(p) => setProfiles((prev) => [...prev, p])}
+        onSelectProfile={(p) => setCurrentProfileId(p.id)}
+        onEditProfile={handleEditProfile}
+        onAddProfile={handleAddProfile}
         onOpenSearch={() => console.log('Open search')}
         onOpenAddTransaction={() => console.log('Open add transaction')}
         onOpenAlerts={() => console.log('Open alerts')}
@@ -124,11 +233,11 @@ function App() {
         onClose={() => setSettingsOpen(false)}
         theme={theme}
         accent={accent}
-        onAccentChange={setAccent}
+        onAccentChange={handleAccentChange}
         baseCurrency={baseCurrency}
-        onBaseCurrencyChange={setBaseCurrency}
+        onBaseCurrencyChange={handleBaseCurrencyChange}
         themeMode={themeMode}
-        onThemeModeChange={setThemeMode}
+        onThemeModeChange={handleThemeModeChange}
         onExportData={handleExportData}
       />
       <SupportModal
